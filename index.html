@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>世界计划角色匹配测试</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', '黑体', sans-serif;
+            background: linear-gradient(135deg, #e6e6fa 0%, #f0e6ff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .artistic-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .artistic-text {
+            position: absolute;
+            top: 80px;
+            left: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            user-select: none;
+            z-index: 2;
+        }
+
+        .text-line {
+            font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+            color: transparent;
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.7);
+            text-stroke: 1.5px rgba(255, 255, 255, 0.7);
+            line-height: 1;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        .project-sekai {
+            font-size: 28px;
+            margin-bottom: 20px;
+            -webkit-text-stroke: 1.8px rgba(255, 255, 255, 0.7);
+            text-stroke: 1.8px rgba(255, 255, 255, 0.7);
+        }
+
+        .colorful-stage {
+            font-size: 52px;
+            margin-bottom: 20px;
+            -webkit-text-stroke: 2.5px rgba(255, 255, 255, 0.7);
+            text-stroke: 2.5px rgba(255, 255, 255, 0.7);
+        }
+
+        .feat-miku {
+            font-size: 22px;
+            -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.7);
+            text-stroke: 1.2px rgba(255, 255, 255, 0.7);
+        }
+
+        #loading-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #e6e6fa 0%, #f0e6ff 100%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-animation {
+            position: absolute;
+            bottom: 80px;
+            right: 80px;
+            width: 120px;
+            height: 120px;
+        }
+
+        .loading-ring {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: white;
+            border: 3px solid #888;
+            animation: ringPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes ringPulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        #test-container {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            min-height: 500px;
+            background-color: #f8f8f8;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 2;
+        }
+
+        .test-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .question-section {
+            background-color: #5CE1E6;
+            color: white;
+            padding: 40px 30px;
+            min-height: 25%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-family: '黑体', sans-serif;
+        }
+
+        .question-counter {
+            font-size: 18px;
+            opacity: 0.9;
+            font-family: '黑体', sans-serif;
+        }
+
+        .answer-section {
+            flex: 1;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #f5f0ff;
+        }
+
+        .slider-container {
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .slider-label {
+            text-align: center;
+            font-size: 18px;
+            color: #4A4A6A;
+            margin-bottom: 20px;
+            font-family: '黑体', sans-serif;
+            font-weight: bold;
+        }
+
+        .slider-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .control-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            background-color: white;
+            font-size: 24px;
+            color: #4A4A6A;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-family: '黑体', sans-serif;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .control-btn:hover {
+            background-color: #f5f5f5;
+            transform: scale(1.05);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .slider-track {
+            flex: 1;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            position: relative;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .slider-fill {
+            height: 100%;
+            background-color: #5CE1E6;
+            border-radius: 4px;
+            transition: width 0.1s;
+            pointer-events: none;
+        }
+
+        .slider-thumb {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border: 3px solid #5CE1E6;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: left 0.1s;
+            pointer-events: none;
+        }
+
+        .slider-value {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 32px;
+            color: #FF6B9D;
+            font-weight: bold;
+            font-family: '黑体', sans-serif;
+        }
+
+        .slider-value-label {
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+            margin-top: 5px;
+            font-family: '黑体', sans-serif;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .test-button {
+            padding: 14px 35px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: '黑体', sans-serif;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .primary-button {
+            background-color: #5CE1E6;
+            color: white;
+            box-shadow: 0 4px 8px rgba(92, 225, 230, 0.3);
+        }
+
+        .primary-button:hover {
+            background-color: #4DD0D5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(92, 225, 230, 0.4);
+        }
+
+        .secondary-button {
+            background-color: white;
+            color: #4A4A6A;
+            border: 2px solid #e0e0e0;
+        }
+
+        .secondary-button:hover {
+            background-color: #f5f5f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-full {
+            width: 100%;
+        }
+
+        .disclaimer {
+            color: #6C6C9D;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-family: '黑体', sans-serif;
+        }
+
+        .result-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: white;
+            font-family: '黑体', sans-serif;
+        }
+
+        .result-character {
+            font-size: 26px;
+            font-weight: bold;
+            margin: 25px 0;
+            color: #4A4A6A;
+            font-family: '黑体', sans-serif;
+        }
+
+        .percentage-ring-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 25px auto;
+        }
+
+        .percentage-ring-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .percentage-ring-bg {
+            fill: none;
+            stroke: #e0e0e0;
+            stroke-width: 12;
+        }
+
+        .percentage-ring-fill {
+            fill: none;
+            stroke: #5CE1E6;
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dasharray 1s ease;
+        }
+
+        .percentage-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: #5CE1E6;
+            font-family: '黑体', sans-serif;
+        }
+
+        .character-info {
+            margin: 25px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            border-left: 5px solid #5CE1E6;
+            font-size: 16px;
+            line-height: 1.7;
+            color: #4A4A6A;
+            font-family: '黑体', sans-serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .result-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="artistic-decoration">
+        <div class="artistic-text">
+            <div class="text-line project-sekai">Project SEKAI</div>
+            <div class="text-line colorful-stage">COLORFUL STAGE</div>
+            <div class="text-line feat-miku">feat. HATSUNE MIKU</div>
+        </div>
+    </div>
+
+    <div id="loading-page">
+        <div class="loading-animation" id="loading-animation"></div>
+    </div>
+
+    <div id="test-container">
+        <div class="test-card" id="start-card">
+            <div class="question-section">
+                <div class="question-text">哪颗心与你共鸣？世界计划角色测试</div>
+            </div>
+            <div class="answer-section">
+                <div class="disclaimer">
+                    本测试为粉丝二创作品，完全免费，基于《世界计划 彩色舞台》世界观。<br>
+                    所有角色版权归属SEGA、Colorful Palette等原公司。<br>
+                    39题·五维·结合角色核心渴望与内心，更贴近「宫益坂」「神山」的她们与他们。
+                </div>
+                <button class="test-button primary-button button-full" id="start-button">开始测试</button>
+            </div>
+        </div>
+
+        <div class="test-card" id="test-card" style="display: none;">
+            <div class="question-section">
+                <div class="question-counter" id="question-counter">1/39 · 请选择符合程度</div>
+                <div class="question-text" id="question-text">加载中...</div>
+            </div>
+            <div class="answer-section">
+                <div class="slider-container">
+                    <div class="slider-label">请滑动选择你的符合程度</div>
+                    <div class="slider-controls">
+                        <button class="control-btn" id="minus-btn">−</button>
+                        <div class="slider-track" id="slider-track">
+                            <div class="slider-fill" id="slider-fill" style="width: 60%;"></div>
+                            <div class="slider-thumb" id="slider-thumb" style="left: 60%;"></div>
+                        </div>
+                        <button class="control-btn" id="plus-btn">+</button>
+                    </div>
+                    <div class="slider-value" id="slider-value">3</div>
+                    <div class="slider-value-label" id="slider-label">有些符合</div>
+                </div>
+                <div class="navigation-buttons">
+                    <button class="test-button secondary-button" id="prev-button" disabled>上一题</button>
+                    <button class="test-button primary-button" id="next-button">下一题</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-card" id="result-card" style="display: none;">
+            <div class="question-section" id="result-header" style="background-color: #5CE1E6;">
+                <div class="result-title">测试结果</div>
+                <div class="result-character" id="result-character">你最像星乃一歌！</div>
+            </div>
+            <div class="answer-section">
+                <div class="percentage-ring-container">
+                    <svg class="percentage-ring-svg" viewBox="0 0 200 200">
+                        <circle class="percentage-ring-bg" cx="100" cy="100" r="88"></circle>
+                        <circle class="percentage-ring-fill" id="ring-fill" cx="100" cy="100" r="88" 
+                                stroke-dasharray="0 553" stroke-dashoffset="0"></circle>
+                    </svg>
+                    <div class="percentage-text" id="percentage-text">0%</div>
+                </div>
+                <div class="character-info" id="character-info">
+                    星乃一歌是Leo/need的主唱，代表色为清新的蓝紫色。她外表冷酷，内心温柔，不善表达但默默关心朋友。
+                </div>
+                <div class="result-buttons">
+                    <button class="test-button secondary-button" id="retry-button">重新测试</button>
+                    <button class="test-button primary-button" id="share-button" style="background-color: #5CE1E6;">分享结果</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // 角色数据 (20名非虚拟歌手，完整保留)
+            const characters = [
+                {
+                    id: 'ichika',
+                    name: '星乃一歌',
+                    color: '#33AAEE',
+                    desc: `星乃一歌是《世界计划》的主人公，她的代表色是清新的蓝紫色，如同天空与海洋的交汇，象征着她内心深处的温柔与坚韧。作为宫益坂女子学园的高中二年级学生，一歌在Leo/need中担任主唱和吉他手。
+
+初见一歌的人，往往会被她酷酷的外表所迷惑。她有着一头黑色长发，总是以略显冷淡的表情示人，给人一种难以接近的距离感。然而，这层看似冷漠的外壳下，包裹着的是一颗极其温柔善良的心。正如游戏中所描述的，她"虽然看起来很酷，其实是对朋友很温柔的少女"。这种反差萌成为了她最吸引人的特质之一。
+
+一歌的性格中有着典型的ISFP人格特征——内向、敏感、温和，同时又具有艺术气质。她不善于表达自己的情感，尤其是在面对曾经疏远的青梅竹马时，总是显得有些笨拙。但正是这种笨拙，反而让人感受到她的真诚。她会默默地关心身边的人，记得每个人的喜好，在关键时刻给予最温暖的支持。
+
+在乐队重组的过程中，一歌展现出了强大的包容力和责任感。面对志步的冷漠、穗波的犹豫，她始终没有放弃，而是用自己的方式努力拉近彼此的距离。她的坚持源于内心深处对友情的珍视，即使在最困难的时候，也从未忘记四人曾经一起度过的美好时光。
+
+一歌还有着不为人知的一面——她是一个重度初音未来粉丝。她的房间里贴满了初音未来的海报，手机里存满了初音未来的歌曲，甚至会在上课时偷偷写歌词。这种对虚拟歌手的热爱，成为了她与初音未来相遇的契机，也为整个故事的展开奠定了基础。
+
+值得一提的是，一歌的名字中蕴含着父母的美好祝愿。"一歌"这个名字不仅因为父母因同一首歌而相识相爱，更寄托着希望她"能够通过唱歌遇到不可替代的人"的寓意。而她也确实通过音乐，重新找回了珍贵的友谊，实现了父母的期望。`,
+                    dim: [2,4,4,3,4]
+                },
+                {
+                    id: 'saki',
+                    name: '天马咲希',
+                    color: '#FFDD44',
+                    desc: `天马咲希的代表色是明亮的金黄色，如同阳光般温暖耀眼，完美诠释了她作为"气氛制造者"的角色定位。作为宫益坂女子学园的高中二年级学生，咲希在Leo/need中担任键盘手。
+
+咲希是一个天生的乐天派，无论何时何地都保持着灿烂的笑容。她的性格外向开朗，充满活力，总是能够用自己的热情感染身边的每一个人。在乐队中，她不仅是键盘手，更是团队的精神支柱，每当大家遇到困难时，她都会用乐观的态度鼓励大家继续前进。
+
+然而，咲希的成长经历并不顺利。她从小体弱多病，中学时期大部分时间都在医院度过，甚至一度无法正常上学。这段与病魔斗争的经历，让她格外珍惜健康的生活，也让她更加渴望与朋友们一起度过美好的青春时光。正如她所说，她想要"尽可能地享受青春，因为住院让她感觉错过了很多"。
+
+尽管经历了病痛的折磨，咲希却从未对生活失去信心。相反，这段经历让她变得更加坚强和成熟。她深知生命的可贵，因此总是积极地面对每一天，努力让自己和身边的人都能感受到幸福。她的乐观不是盲目的，而是源于对生活的深刻理解和珍惜。
+
+咲希还有着独特的时尚品味，特别喜欢gyaru风格和亚文化时尚。她经常在网上观看时尚和化妆视频，甚至会自己制作珠饰配件。这种对美的追求，不仅体现在她的外表上，更融入了她的音乐创作中。她的歌曲总是充满了色彩感和画面感，让人听了就忍不住想要翩翩起舞。
+
+作为乐队的键盘担当，咲希的演奏风格热情奔放，充满感染力。她的琴声如同她的性格一样，总是能够给人带来温暖和力量。在乐队重组的过程中，她是最积极的推动者，正是她的坚持和热情，才让一歌、志步和穗波重新走到了一起。`,
+                    dim: [5,5,3,2,4]
+                },
+                {
+                    id: 'honami',
+                    name: '望月穗波',
+                    color: '#EE6666',
+                    desc: `望月穗波的代表色是鲜艳的橙红色，这种介于热情与温柔之间的色彩，恰如其分地反映了她复杂而矛盾的内心世界。作为宫益坂女子学园的高中二年级学生，穗波在Leo/need中担任鼓手。
+
+穗波的性格经历了一个明显的成长过程。初期的她内向害羞、缺乏自信，总是小心翼翼地观察着周围人的反应。她有着严重的讨好型人格，总是对每个人都笑脸相迎，生怕得罪任何人。这种性格源于她中学时期的痛苦经历——她曾因"对谁都太好"而遭到同学的排挤和嘲笑。
+
+中学时期的那段经历给穗波留下了深深的心理创伤。她开始害怕与人交往，总是担心自己的善意会被误解。当一歌多次想要与她重归于好时，她总是选择逃避，因为她害怕再次经历被伤害的痛苦。她的内心充满了矛盾：一方面渴望与朋友们重归于好，另一方面又害怕再次受到伤害。
+
+然而，随着乐队活动的推进，穗波逐渐展现出了温柔坚强的一面。她开始学会表达自己的真实想法，不再一味地迎合他人。她的转变不仅体现在性格上，更体现在音乐演奏中。她的鼓声从最初的犹豫不决，变得越来越坚定有力，仿佛在诉说着她内心的成长。
+
+穗波还是一个文武双全的优等生。她的学习成绩优异，在班级中担任重要职务，同时在音乐方面也有着极高的天赋。她的鼓技精湛，能够准确把握每首歌曲的节奏和情感，为乐队的演奏增添了独特的魅力。
+
+在乐队重组的过程中，穗波的内心挣扎最为激烈。她既想回到四人组温暖的怀抱，又害怕再次受伤。最终，在一歌的坚持和咲希的感染下，她终于鼓起勇气面对自己的内心，重新找回了失去的友谊。这个过程虽然痛苦，但也让她变得更加坚强和成熟。`,
+                    dim: [2,4,5,4,3]
+                },
+                {
+                    id: 'shiho',
+                    name: '日野森志步',
+                    color: '#BBDD22',
+                    desc: `日野森志步的代表色是清新的黄绿色，这种接近自然的色彩，象征着她内心深处的纯净和对真实的追求。作为宫益坂女子学园的高中二年级学生，志步在Leo/need中担任贝斯手。
+
+志步是一个典型的外冷内热的人。她平时总是一副"生人勿近"的表情，给人一种难以接近的距离感。她不善于表达自己的情感，总是用冷漠的外表来保护自己。然而，在这层冰冷的外壳下，隐藏着一颗极其温柔和善良的心。正如游戏中所描述的，她"虽然平时表现出一副生人勿近的孤狼模样，但她比任何人都珍视这来之不易的友情"。
+
+志步的性格形成与她的成长经历密切相关。中学时期，她因为性格内向、不善于社交而遭到同学的孤立。为了避免给一歌带来麻烦，她主动选择了疏远。这段经历让她变得更加封闭自己，也让她对人际关系产生了深深的不信任。
+
+然而，志步有着自己的原则和坚持。她不会因为想要讨好别人而改变自己，也不会因为害怕孤独而勉强自己融入不适合的圈子。她宁愿一个人独处，也不愿意虚伪地迎合他人。这种坚持虽然让她显得有些孤僻，但也让她保持了内心的纯净和真实。
+
+在音乐方面，志步展现出了极高的天赋和执着。她的贝斯演奏技巧娴熟，能够准确把握每首歌曲的低音部分，为乐队的整体演奏奠定了坚实的基础。她对音乐有着自己独特的理解，总是能够提出富有建设性的意见，推动乐队不断进步。
+
+志步还有着不为人知的一面——她是一个重度猫奴。她非常喜欢猫，甚至到了痴迷的程度。她会在上学的路上喂流浪猫，会在家里偷偷养猫，甚至会因为担心猫的安危而分心。这种对小动物的热爱，展现了她内心深处的温柔和善良。
+
+在乐队重组的过程中，志步是最后一个加入的成员。她对一歌和咲希提出了严格的要求——如果她们能够完美演奏她指定的曲目，她才会加入乐队。这个要求看似苛刻，实际上是她对音乐和友谊的双重考验。当她看到一歌和咲希为了达到她的要求而努力练习时，她内心的防线终于被打动，重新回到了四人组的怀抱。`,
+                    dim: [1,3,5,3,3]
+                },
+                {
+                    id: 'minori',
+                    name: '花里实乃理',
+                    color: '#FFCCAA',
+                    desc: `花里实乃理的代表色是温暖的粉橙色，这种甜美而充满活力的色彩，完美诠释了她作为偶像的魅力和热情。作为宫益坂女子学园的高中一年级学生，实乃理是MORE MORE JUMP!的队长和主唱。
+
+实乃理是一个典型的元气少女，性格乐观开朗，充满干劲。她的字典里似乎没有"放弃"这个词，无论遇到什么困难都会积极面对。她的偶像梦想源于内心深处对舞台的热爱，即使经历了无数次试镜失败，也从未动摇过成为偶像的决心。正如她所说："只要站上舞台，就感觉整个人都在闪闪发光！"
+
+然而，实乃理也有着自己的小缺点——她有些笨手笨脚，容易慌张。在紧张的情况下，她可能会忘记歌词，可能会跳错舞步，甚至可能会在舞台上摔倒。但这些小失误反而让她显得更加真实和可爱，粉丝们反而觉得这样的她更加亲切。
+
+实乃理的偶像之路充满了挑战。她曾经是偶像组合"QT"的成员，但因为某些原因退出了。这段经历让她更加珍惜现在的机会，也让她明白了团队合作的重要性。她深知一个人的力量是有限的，只有大家齐心协力，才能在偶像的道路上走得更远。
+
+在MORE MORE JUMP!中，实乃理不仅是队长，更是大家的精神领袖。她总是用积极的态度感染着每一个人，用自己的热情点燃大家的梦想。她会在队友气馁时给予鼓励，会在团队遇到困难时想出解决办法，会在演出前为大家打气加油。她的存在，让整个团队充满了凝聚力。
+
+实乃理还有着独特的时尚品味，她特别喜欢可爱的服装和配饰。她的衣柜里塞满了各种颜色鲜艳、设计可爱的衣服，她的房间里摆满了毛绒玩具和卡通摆件。这种对可爱事物的热爱，不仅体现在她的日常生活中，更融入了她的偶像表演中，成为了她独特的风格标志。`,
+                    dim: [5,5,4,3,3]
+                },
+                {
+                    id: 'haruka',
+                    name: '桐谷遥',
+                    color: '#99CCFF',
+                    desc: `桐谷遥的代表色是宁静的淡蓝色，这种清澈如水的色彩，与她内敛、冷静的性格相得益彰。作为宫益坂女子学园的高中二年级学生，遥在MORE MORE JUMP!中担任舞蹈担当。
+
+遥曾经是一名人气偶像，在电视台的综艺节目中频繁露面，拥有大量粉丝。然而，在事业如日中天的时候，她却突然宣布退出演艺圈，回到学校继续学业。这个决定让所有人都感到意外，包括她的粉丝和经纪公司。但遥有自己的理由——她觉得自己在追求偶像梦想的过程中迷失了自我，想要重新找回真正的自己。
+
+遥的性格理性而冷静，总是能够在关键时刻保持清醒的头脑。她不善于表达自己的情感，总是用冷静的外表来掩饰内心的波动。但这并不意味着她冷漠，相反，她对身边的人有着深深的关心，只是不善于用言语表达而已。
+
+在MORE MORE JUMP!中，遥是团队的技术担当。她的舞蹈功底扎实，编舞能力出众，总是能够为团队设计出既美观又有难度的舞蹈。她对舞蹈有着极高的要求，总是不断地打磨每一个动作，力求做到完美。她的这种精益求精的态度，带动了整个团队的进步。
+
+遥还有着独特的洞察力。她能够敏锐地察觉到团队成员的情绪变化，在大家需要帮助时及时伸出援手。虽然她话不多，但每一句话都很有分量，总是能够说到点子上。她是团队中最可靠的存在，就像大海中的灯塔，为大家指引方向。
+
+值得一提的是，遥还是一个重度书虫。她的房间里堆满了各种书籍，从文学名著到商业管理，从心理学到社会学，她都有所涉猎。这种广泛的阅读不仅丰富了她的内涵，也为她的偶像活动提供了更多的灵感和素材。`,
+                    dim: [3,4,5,2,3]
+                },
+                {
+                    id: 'airi',
+                    name: '桃井爱莉',
+                    color: '#FF6699',
+                    desc: `桃井爱莉的代表色是热情的粉红色，这种充满活力的色彩，完美诠释了她作为前偶像的专业素养和对偶像事业的热爱。作为宫益坂女子学园的高中三年级学生，爱莉在MORE MORE JUMP!中担任制作人角色。
+
+爱莉曾经是偶像组合"QT"的成员，与实乃理是旧相识。她对偶像事业有着强烈的热情和自豪感，即使离开了演艺圈，也始终关注着偶像界的动态。她的性格自信而坚定，有着强烈的责任感和使命感。在MORE MORE JUMP!中，她不仅是成员之一，更是团队的"妈妈"，照顾着每一个人的生活起居。
+
+爱莉有着极强的组织能力和策划能力。她负责团队的日程安排、演出策划、服装道具等大小事务，是团队正常运转的关键人物。她的工作效率极高，能够在短时间内完成复杂的任务，而且质量总是让人放心。她的存在，让整个团队的运作变得井井有条。
+
+爱莉的性格中有着典型的ENTJ特征——外向、果断、有领导力。她总是能够在混乱中找到秩序，在困难中找到解决方案。她的决策总是理性而果断，不会被情绪左右。在团队遇到分歧时，她能够冷静地分析问题，提出合理的建议，帮助大家达成共识。
+
+然而，爱莉也有着不为人知的一面。她曾经因为某些原因被迫退出偶像界，这段经历给她留下了深深的遗憾。但她并没有因此而放弃对偶像事业的热爱，而是将这份热情转化为对MORE MORE JUMP!的支持和帮助。她希望通过自己的努力，帮助实乃理等人实现自己未能完成的梦想。
+
+爱莉还有着一手好厨艺。她经常会为团队成员做各种美食，从早餐到夜宵，从正餐到甜点，她都能做得色香味俱全。她做的食物不仅好吃，还充满了心意，总是能够让大家感受到家的温暖。`,
+                    dim: [4,4,5,2,3]
+                },
+                {
+                    id: 'shizuku',
+                    name: '日野森雫',
+                    color: '#99EEDD',
+                    desc: `日野森雫的代表色是清新的蓝绿色，这种接近自然的色彩，与她优雅、内敛的气质完美契合。作为宫益坂女子学园的高中一年级学生，雫在MORE MORE JUMP!中担任主唱之一。
+
+雫是一个典型的大小姐，出身于富裕家庭，从小接受良好的教育。她的举止优雅，谈吐得体，总是给人一种高贵的感觉。她的学习成绩优异，特别是英语，达到了可以当家教的水平。她还会弹钢琴，钢琴水平已经达到了演奏级。
+
+然而，雫的内心世界远比她的外表复杂。她有着典型的INFJ人格特征——内向、理想主义、富有洞察力。她善于观察，能够敏锐地察觉到周围人的情绪变化，但她很少主动表达自己的想法和感受。她总是在思考，在观察，在寻找生命的意义和价值。
+
+雫对偶像事业有着独特的理解。她认为偶像不仅是在舞台上表演的艺人，更是能够给人们带来希望和勇气的存在。她希望通过自己的歌声，能够触动人们内心深处最柔软的地方，给他们带来力量和温暖。她的这种理念，让她的歌声总是充满了感染力。
+
+在MORE MORE JUMP!中，雫是一个神秘而重要的存在。她话不多，但每一次开口都很有分量。她总是默默地支持着团队，在关键时刻发挥重要作用。她的歌声清澈纯净，如同天籁之音，为团队的表演增添了独特的魅力。
+
+值得一提的是，雫还是一个弓道高手。她从小学习弓道，技术已经达到了相当高的水平。弓道教会了她专注和耐心，也培养了她的气质和品格。这种对传统文化的热爱，也体现在她的偶像表演中，让她的舞台表现总是充满了古典美。`,
+                    dim: [2,5,4,2,4]
+                },
+                {
+                    id: 'kohane',
+                    name: '小豆泽心羽',
+                    color: '#FF6699',
+                    desc: `小豆泽心羽的代表色是温暖的粉红色，这种柔和的色彩与她内向、胆小的性格形成了有趣的对比。作为青叶市立东中的初中二年级学生，心羽是Vivid BAD SQUAD的主唱。
+
+心羽是一个极度内向和胆小的女孩，做什么都战战兢兢的。她非常腼腆，对自己缺乏自信，总是害怕在别人面前表现自己。她的声音很轻，说话总是结结巴巴的，即使是在熟悉的人面前也会感到紧张。这种性格让她在日常生活中总是处于被动状态，很难主动表达自己的想法和感受。
+
+然而，心羽有着不为人知的音乐天赋。她的歌声清澈纯净，充满了感染力。每当她唱歌时，整个人都会散发出一种特殊的光芒，仿佛变了一个人。她的歌声能够打动人心，让人感受到她内心深处的情感。这种反差让认识她的人都感到惊讶——那个平时连话都说不清楚的小女孩，竟然能够唱出如此动人的歌曲。
+
+心羽加入Vivid BAD SQUAD的过程充满了戏剧性。她原本只是一个普通的中学生，每天过着平凡的生活。直到有一天，她在小巷里听到了杏的歌声，被那种自由奔放的音乐风格深深吸引。在杏的邀请下，她鼓起勇气加入了这个街头音乐团体，开始了她的音乐之旅。
+
+在心羽的成长过程中，她逐渐学会了面对恐惧，克服困难。她开始敢于在公众场合唱歌，开始敢于表达自己的想法，开始敢于追求自己的梦想。虽然这个过程充满了挑战和困难，但她从未放弃。她的努力得到了回报，不仅在音乐上取得了进步，在性格上也变得更加坚强和自信。
+
+心羽还有着一颗善良而敏感的心。她总是能够感受到别人的情绪变化，在队友需要帮助时及时伸出援手。虽然她不善于用言语表达，但她的行动总是充满了关怀和温暖。她是团队中的"治愈系"存在，总是能够给大家带来安慰和力量。`,
+                    dim: [1,4,3,5,3]
+                },
+                {
+                    id: 'an',
+                    name: '白石杏',
+                    color: '#00BBDD',
+                    desc: `白石杏的代表色是清新的天蓝色，这种明亮而冷静的色彩，完美诠释了她直率、果断的性格。作为青叶市立东中的初中三年级学生，杏是Vivid BAD SQUAD的主唱之一。
+
+杏是一个性格直爽、做事积极果断的女孩，好胜心强，从不服输。她有着男孩子般的性格，说话做事从不拐弯抹角，总是直接表达自己的想法和感受。她的行动力极强，一旦决定了什么事情就会立刻去做，从不拖泥带水。
+
+然而，杏的内心远比她的外表温柔和细腻。她实际上是一个很会照顾他人感受的人，总是能够在关键时刻给予别人支持和帮助。她的直率不是没有分寸的，而是建立在对他人的理解和关心之上。她会毫不留情地指出别人的错误，但同时也会给予真诚的建议和鼓励。
+
+杏对音乐有着强烈的热情和执着。她从小就喜欢唱歌，梦想着有一天能够成为一名真正的歌手。她的音乐风格自由奔放，充满了街头气息。她的歌声充满了力量，能够点燃听众的热情。她相信音乐是表达自我的最好方式，通过音乐她能够传达自己的信念和情感。
+
+在Vivid BAD SQUAD的组建过程中，杏发挥了关键作用。是她主动邀请心羽加入团队，是她积极寻找合适的队友，是她推动了整个团队的发展。她的领导能力和组织能力，让Vivid BAD SQUAD从一个松散的组合逐渐成长为一个有凝聚力的团队。
+
+杏还有着独特的时尚品味，特别喜欢街头文化和嘻哈风格的服装。她的穿着总是充满个性，从帽子到鞋子，每一个细节都经过精心搭配。这种对时尚的追求，也体现在她的音乐风格中，形成了她独特的个人魅力。
+
+值得一提的是，杏还是一个兼职咖啡师。她在一家名为"Crase Cafe"的咖啡店打工，这家店后来成为了Vivid BAD SQUAD的活动据点。她的咖啡拉花技术一流，总是能够做出各种可爱的图案，给顾客带来惊喜。`,
+                    dim: [5,4,4,2,4]
+                },
+                {
+                    id: 'akito',
+                    name: '东云彰人',
+                    color: '#FF7722',
+                    desc: `东云彰人的代表色是热情的橙黄色，这种充满活力的色彩，与他阳光、开朗的性格完美契合。作为青叶市立东中的初中三年级学生，彰人是Vivid BAD SQUAD的DJ和制作人。
+
+彰人是一个性格外向、活泼的男孩，总是充满活力和热情。他有着很强的社交能力，能够很快与陌生人打成一片。他的幽默感十足，总是能够用笑话和段子活跃气氛。在团队中，他是"开心果"般的存在，总是能够让大家忘记烦恼，享受音乐带来的快乐。
+
+彰人对音乐有着极高的天赋和热情。他从小就对音乐感兴趣，特别喜欢电子音乐和嘻哈音乐。他的DJ技术精湛，能够熟练操作各种设备，创造出独特的音乐效果。他还会自己制作音乐，从作曲到编曲，他都能够独立完成。他的音乐风格充满了创新和实验性，总是能够给听众带来惊喜。
+
+在Vivid BAD SQUAD中，彰人不仅是DJ，更是团队的音乐制作人。他负责团队大部分歌曲的制作和混音工作，为每首歌曲注入独特的风格和灵魂。他的创造力和想象力，让Vivid BAD SQUAD的音乐总是充满新鲜感。
+
+彰人还有着不为人知的一面——他是一个重度游戏玩家。他的房间里摆满了各种游戏设备，从主机到掌机，从游戏手柄到键盘鼠标，应有尽有。他特别喜欢节奏类游戏，这也培养了他对音乐节奏的敏锐感知。他经常会从游戏音乐中汲取灵感，运用到自己的音乐创作中。
+
+值得一提的是，彰人还有一个双胞胎妹妹——东云绘名。虽然两人性格迥异，但感情非常好。彰人总是会在妹妹需要帮助时给予支持，而绘名也会在哥哥的音乐创作中提供灵感。这种兄妹关系，为两人的角色增添了更多的人情味。`,
+                    dim: [5,4,3,2,4]
+                },
+                {
+                    id: 'touya',
+                    name: '青柳冬弥',
+                    color: '#0077DD',
+                    desc: `青柳冬弥的代表色是深邃的深蓝色，这种神秘而沉稳的色彩，与他沉默寡言、内心丰富的性格相得益彰。作为青叶市立东中的初中三年级学生，冬弥是Vivid BAD SQUAD的MC和rapper。
+
+冬弥是一个沉默寡言但意志坚强的男孩。他平时话不多，总是默默地观察和思考。他的表情总是很严肃，给人一种难以接近的感觉。但熟悉他的人都知道，他的内心世界非常丰富，有着自己独特的价值观和人生观。
+
+冬弥的性格形成与他的成长经历密切相关。他有着复杂的家庭背景，这让他从小就学会了独立和坚强。他不善于表达自己的情感，但他的行动总是充满了责任感和担当。在团队中，他是最可靠的存在，总是能够在关键时刻发挥重要作用。
+
+冬弥的rap功底深厚，他的歌词充满了哲理和深度。他不喜欢那些空洞的歌词，总是会在歌词中融入自己的思考和感悟。他的rap风格独特，既有街头的粗犷，又有诗人的细腻，形成了独特的个人魅力。他的每一首作品都像是一篇诗歌，能够引起听众的共鸣和思考。
+
+在Vivid BAD SQUAD中，冬弥是一个神秘而重要的存在。虽然他话不多，但他的每一句话都很有分量。他是团队的"智囊"，总是能够在大家遇到困难时提出建设性的意见。他的冷静和理智，为团队提供了稳定的支撑。
+
+冬弥还有着一个特殊的爱好——他喜欢观察星星。每当夜幕降临，他都会来到屋顶仰望星空，思考人生的意义。这种对宇宙的敬畏和对生命的思考，也体现在他的音乐创作中，让他的作品总是充满了哲学意味。
+
+值得一提的是，冬弥还是一个功夫高手。他从小学习武术，精通多种格斗技巧。这种对武术的热爱，不仅锻炼了他的体魄，也培养了他的意志力和专注力。这种精神品质，也融入了他的音乐表演中，让他的舞台表现总是充满了力量感。`,
+                    dim: [2,3,5,3,4]
+                },
+                {
+                    id: 'tsukasa',
+                    name: '天马司',
+                    color: '#FFBB00',
+                    desc: `天马司的代表色是明亮的金黄色，这种如同太阳般耀眼的色彩，完美诠释了他作为"世界第一的Showstar"的雄心壮志。作为宫益坂女子学园的高中二年级学生，司是Wonderlands×Showtime的队长和主演。
+
+司是一个极度自信甚至有些自恋的少年，他的梦想是成为"世界第一的Showstar"。他总是充满活力，精力充沛，仿佛有用不完的热情。他的性格外向开朗，喜欢在众人面前表现自己，享受舞台上的每一刻。他的座右铭是："笑容是世界上最美丽的东西！"
+
+司的自信并非没有根据。他有着极强的表演天赋，无论是唱歌、跳舞还是表演，他都能够轻松驾驭。他的舞台表现力极强，总是能够用自己的热情感染观众，让每一场演出都充满了欢乐和惊喜。他相信表演的力量，认为通过表演可以给人们带来幸福和勇气。
+
+然而，司的成长经历并不顺利。他有一个体弱多病的妹妹——天马咲希，他从小就一直在照顾妹妹。这种经历让他变得更加坚强和成熟，也让他更加珍惜与妹妹在一起的时光。他的表演梦想，很大程度上是为了让妹妹能够开心，能够忘记病痛的折磨。
+
+在Wonderlands×Showtime的组建过程中，司发挥了核心作用。是他主动邀请了各个成员加入团队，是他构思了各种精彩的演出计划，是他推动了整个团队的发展。他的领导能力和创造力，让Wonderlands×Showtime从一个小小的剧团逐渐成长为一个有影响力的表演团体。
+
+司还有着独特的想象力和创造力。他总是能够想出各种新奇有趣的表演创意，从舞台设计到剧情编排，他都能够提出独特的见解。他的脑子里装满了各种奇思妙想，总是能够给团队带来惊喜。他相信"想象力是无限的"，只要敢于想象，就没有什么不可能的事情。
+
+值得一提的是，司还有一个秘密身份——他是凤凰仙境游乐园的兼职演员。这个游乐园后来成为了Wonderlands×Showtime的活动场地，也成为了他们实现梦想的舞台。他在游乐园的工作经历，为他的表演积累了丰富的经验，也让他更加了解观众的需求和喜好。`,
+                    dim: [5,3,4,2,5]
+                },
+                {
+                    id: 'emu',
+                    name: '凤笑梦',
+                    color: '#FF66BB',
+                    desc: `凤笑梦的代表色是可爱的粉红色，这种甜美而梦幻的色彩，完美诠释了她天真烂漫、充满幻想的性格。作为宫益坂女子学园的高中一年级学生，笑梦是Wonderlands×Showtime的主演之一。
+
+笑梦是一个性格开朗、天真烂漫的女孩，有着无限的想象力和好奇心。她的世界里充满了童话和魔法，她相信一切美好的事物都有可能实现。她的笑容如同阳光般灿烂，能够感染身边的每一个人。她的存在本身就是一个奇迹，让周围的人都感受到了快乐和幸福。
+
+笑梦的身世有些特殊——她是凤凰仙境游乐园的继承人。她的祖父是游乐园的创始人，在祖父去世后，她成为了游乐园的新主人。然而，由于经营不善，游乐园逐渐衰落，面临着关闭的危机。笑梦决心用自己的力量拯救这个充满回忆的地方，让它重新焕发生机。
+
+笑梦对游乐园有着深深的眷恋和热爱。她在这里长大，这里的每一个角落都充满了她的回忆。她记得每一个游乐设施的故事，记得每一个员工的名字，记得每一个来过这里的游客的笑脸。她相信游乐园是"梦想实现的地方"，每一个来到这里的人都能够找到属于自己的快乐。
+
+在Wonderlands×Showtime中，笑梦是一个不可或缺的核心成员。她的表演风格天真可爱，充满了童话色彩。她的歌声如同天籁，她的舞蹈轻盈优美，她的表演总是能够把观众带入一个充满魔法的世界。她是团队中的"精灵"，总是能够给大家带来灵感和欢乐。
+
+笑梦还有着一颗极其善良和纯真的心。她总是能够看到别人的优点，总是能够给予别人信任和支持。她相信"人性本善"，即使面对困难和挫折，也始终保持着乐观的态度。她的这种品质，不仅感染了团队成员，也感染了每一个观众。
+
+值得一提的是，笑梦还有一个特殊的能力——她能够与游乐园里的吉祥物玩偶"交流"。她相信这些玩偶都是有生命的，它们都有着自己的故事和梦想。这种纯真的信念，让她的表演总是充满了魔力，也让Wonderlands×Showtime的演出总是充满了惊喜。`,
+                    dim: [5,5,2,1,5]
+                },
+                {
+                    id: 'nene',
+                    name: '草薙宁宁',
+                    color: '#33DD99',
+                    desc: `草薙宁宁的代表色是清新的嫩绿色，这种充满生机的色彩，与她温柔、善良的性格相得益彰。作为宫益坂女子学园的高中二年级学生，宁宁是Wonderlands×Showtime的道具师和舞台监督。
+
+宁宁是一个性格内向、温柔的女孩，有些害羞但非常善良。她不善于在公众场合表现自己，更喜欢在幕后默默工作。她的手工能力极强，总是能够制作出各种精美的道具和服装。她的细心和耐心，让她成为了团队中不可或缺的存在。
+
+宁宁对表演有着独特的理解。她认为道具和舞台设计同样重要，它们是营造氛围、传达情感的重要手段。她总是能够根据剧情的需要，设计出恰到好处的道具和场景。她的作品不仅美观，还充满了创意，总是能够给观众带来视觉上的惊喜。
+
+在Wonderlands×Showtime中，宁宁是幕后英雄。虽然她不经常出现在舞台上，但她的贡献却不容忽视。从简单的道具制作到复杂的舞台装置，从服装设计到灯光效果，她都能够一手包办。她的工作虽然琐碎，但每一个细节都经过精心设计，为整个演出增添了无数亮点。
+
+宁宁还有着一颗极其细腻的心。她总是能够注意到别人注意不到的细节，在团队需要时及时提供帮助。她会在队友紧张时递上一杯热茶，会在道具损坏时迅速修复，会在舞台出现问题时想出应急方案。她是团队中的"小天使"，总是能够给大家带来温暖和安心。
+
+值得一提的是，宁宁还有一个特殊的爱好——她喜欢收集各种可爱的小玩意儿。她的房间里摆满了各种手办、徽章、钥匙链等小饰品，每一个都有自己的故事。她会把这些小玩意儿融入到道具设计中，为每一个道具都赋予独特的个性。`,
+                    dim: [1,4,5,3,4]
+                },
+                {
+                    id: 'rui',
+                    name: '神代类',
+                    color: '#BB88EE',
+                    desc: `神代类的代表色是神秘的紫红色，这种深邃而独特的色彩，完美诠释了他古怪、神秘的性格。作为神山高校的高中三年级学生，类是Wonderlands×Showtime的发明家兼舞台设计师。
+
+类是一个性格古怪、充满神秘感的少年，他的脑子里总是充满了各种奇思妙想。他有着独特的世界观和价值观，总是能够从不同的角度看待问题。他的行为常常让人难以理解，但他的创造力和想象力却让人不得不佩服。
+
+类是一个天才发明家，他能够发明各种奇妙的装置和道具。从简单的机关到复杂的机器人，从舞台特效到交通工具，他都能够设计并制作出来。他的发明总是充满了创意和惊喜，常常让团队成员和观众都目瞪口呆。他相信"科技与艺术的结合能够创造奇迹"，通过自己的发明，他能够为表演增添更多的可能性。
+
+然而，类的内心世界远比他的外表复杂和孤独。他不善于与人交流，总是沉浸在自己的世界里。他的发明很大程度上是为了填补内心的空虚，通过创造来证明自己的价值。他渴望被理解和认可，但又不知道如何表达自己的情感。
+
+在Wonderlands×Showtime中，类是一个神秘而重要的存在。他的发明为团队的表演提供了无限的可能性，从飞天装置到变形机器人，从激光特效到全息投影，他总是能够带来惊喜。他的创造力和技术能力，让Wonderlands×Showtime的演出总是充满了科技感和未来感。
+
+类还有着独特的时尚品味，特别喜欢蒸汽朋克和科幻风格的服装。他的穿着总是充满个性，从护目镜到齿轮装饰，从皮质外套到金属靴子，每一个细节都经过精心设计。这种对时尚的追求，也体现在他的发明设计中，形成了独特的"类风格"。
+
+值得一提的是，类还有一个秘密实验室，里面摆满了各种发明工具和实验设备。他经常在实验室里熬夜工作，为了一个创意废寝忘食。虽然他的发明常常会出现一些意外状况（比如爆炸、失控等），但他从不气馁，总是能够从失败中吸取经验，创造出更好的作品。`,
+                    dim: [3,2,3,3,5]
+                },
+                {
+                    id: 'kanade',
+                    name: '宵崎奏',
+                    color: '#BB6688',
+                    desc: `宵崎奏的代表色是神秘的紫红色，这种深邃而忧郁的色彩，完美诠释了她内心深处的痛苦和对音乐的执着。作为某函授高中的高中二年级学生，奏是25时的创始人兼作曲家。
+
+奏是一个内心充满矛盾和痛苦的少女。她曾经是一个开朗活泼的孩子，但一场意外改变了她的一生。她创作的音乐无意中伤害了她最爱的父亲，导致父亲陷入了深深的自责和绝望。这件事给奏带来了巨大的心理创伤，她认为是自己的音乐"杀死"了父亲的音乐梦想，从此陷入了深深的自责和痛苦之中。
+
+为了赎罪，奏决定创作"让人幸福的音乐"。她成立了25时这个音乐社团，希望通过音乐来治愈他人，也希望通过音乐来救赎自己。她每天在凌晨1点（25时）准时上线，通过网络平台与其他成员交流创作。她的音乐风格充满了悲伤和孤独，但同时也蕴含着希望和力量。
+
+奏的性格内向、敏感、缺乏安全感。她不善于与人面对面交流，更喜欢通过网络和音乐来表达自己。她的生活非常单调，除了作曲就是睡觉，很少有其他的娱乐活动。她的身体很虚弱，不擅长运动，甚至连家务都做不好。她的世界里只有音乐，音乐是她唯一的救赎。
+
+然而，奏对音乐有着极度的执着和天赋。她能够凭借感觉准确计时，这种特殊能力让她在音乐创作中能够精确把握节奏和旋律。她的音乐作品充满了情感和深度，每一首曲子都像是她内心世界的写照。她相信音乐是有灵魂的，通过音乐她能够传达自己无法用言语表达的情感。
+
+在25时中，奏是核心和灵魂人物。她不仅负责作曲，还要协调团队的创作方向，为每首歌曲确定主题和风格。她的存在让25时成为了一个真正的音乐创作团队，而不仅仅是一群网友的集合。她的坚持和努力，也感染了其他成员，让大家都能够在音乐创作中找到自己的价值。
+
+值得一提的是，奏还有一个特殊的习惯——她喜欢在深夜听各种类型的音乐，从古典到流行，从摇滚到电子，她都有所涉猎。这种广泛的音乐品味，为她的创作提供了丰富的灵感来源。她会把听到的各种音乐元素融入到自己的作品中，创造出独特的"奏风格"。`,
+                    dim: [1,3,5,5,5]
+                },
+                {
+                    id: 'mafuyu',
+                    name: '朝比奈真冬',
+                    color: '#8888CC',
+                    desc: `朝比奈真冬的代表色是深邃的蓝紫色，这种神秘而优雅的色彩，与她复杂的人格和内心世界完美契合。作为宫益坂女子学园的高中三年级学生，真冬是25时的作词家兼混音师。
+
+真冬是一个充满矛盾的人物。在学校里，她是一个品学兼优的优等生，担任班级委员，在弓道部表现出色，深受老师和同学的喜爱。她聪明、善良、慷慨、体贴，是大家眼中的完美学生。然而，这种完美的表象下，隐藏着一个极度空虚和迷茫的灵魂。
+
+真冬的内心世界是冰冷而孤独的。她感受不到真实的情感，不知道自己真正喜欢什么，不知道自己真正想要什么。她的一切行为都是为了满足别人的期待，为了成为别人眼中的"好孩子"。她的母亲对她有着极高的期望，要求她在各个方面都做到完美，这让她感到巨大的压力和痛苦。
+
+真冬在25时使用网名"雪"，后来又以"own"的名义进行音乐创作。她的音乐风格冷酷而黑暗，与她在学校里的形象形成了鲜明的对比。她的歌词充满了对现实的质疑和对自我的探寻，每一句歌词都像是对内心深处的拷问。她通过音乐来寻找真实的自己，试图在黑暗中找到一丝光明。
+
+真冬的性格直率而诚实，甚至到了残忍的地步。她不善于说谎，总是直接表达自己的想法和感受。当被问及意见时，她经常回答"不知道"，但这并不是敷衍，而是她真的不知道自己的真实想法。她在努力寻找答案，努力理解自己的情感。
+
+在25时中，真冬是一个神秘而重要的存在。她的作词能力极强，总是能够用简洁而有力的语言表达深刻的情感。她的混音技术也很出色，能够为每首歌曲添加独特的音效和氛围。她的存在为25时的音乐增添了独特的风格，也为团队带来了更多的可能性。
+
+值得一提的是，真冬还有一个特殊的爱好——她喜欢盯着鱼缸看。她觉得鱼的世界简单而纯粹，没有复杂的人际关系，没有沉重的期待和压力。她希望自己也能够像鱼一样，在自己的世界里自由地游弋。`,
+                    dim: [1,2,5,5,3]
+                },
+                {
+                    id: 'ena',
+                    name: '东云绘名',
+                    color: '#CCAA88',
+                    desc: `东云绘名的代表色是温暖的橙黄色，这种明亮而柔和的色彩，与她渴望被认可、努力寻找自我的内心世界形成了有趣的对比。作为神山高校夜间定时制的高中二年级学生，绘名是25时的插画师。
+
+绘名是一个极度渴望被认可的女孩。她的父亲是知名画家，这给她带来了巨大的压力和期望。她希望能够像父亲一样成为优秀的画家，得到大家的认可和赞扬。她在网上积极投稿自己的作品，希望能够获得关注和好评。她的SNS账号是她展示自我的重要平台，她会精心设计每一张照片，每一条动态，希望能够给别人留下好印象。
+
+然而，绘名的内心深处充满了不安和自卑。她担心自己的作品不够好，担心自己无法超越父亲的成就，担心自己永远无法得到真正的认可。她的这种焦虑和不安，让她变得有些虚荣和做作，总是试图在别人面前展示自己最好的一面。
+
+绘名的性格中有着典型的ISFP特征——内向、敏感、温和，但同时又有ESFP的外向和热情。这种复杂的性格让她在不同的场合表现出不同的面貌。在网上她可能是一个自信的艺术家，在现实中她可能是一个害羞的学生。这种分裂的人格让她感到困惑和痛苦。
+
+在25时中，绘名负责为团队的音乐制作MV插图。她的绘画风格独特，充满了想象力和创造力。她能够根据音乐的情感和主题，创作出恰到好处的视觉作品。她的作品不仅美观，还充满了故事性，能够让观众更好地理解音乐的内涵。
+
+绘名还有一个双胞胎哥哥——东云彰人。虽然两人性格迥异，但感情非常好。彰人总是能够理解妹妹的不安和焦虑，给予她支持和鼓励。而绘名也会在哥哥的音乐创作中提供灵感和建议。这种兄妹关系，为两人的角色增添了更多的人情味。
+
+值得一提的是，绘名还有一个特殊的习惯——她喜欢自拍并上传到SNS。她会花费大量时间来准备自拍，从服装搭配到表情管理，每一个细节都经过精心设计。她希望通过自拍来展示自己的美丽和自信，但同时也担心别人的评价和批评。`,
+                    dim: [3,3,3,5,4]
+                },
+                {
+                    id: 'mizuki',
+                    name: '晓山瑞希',
+                    color: '#DDAACC',
+                    desc: `晓山瑞希的代表色是柔和的粉紫色，这种甜美而梦幻的色彩，完美诠释了她天真无邪、充满童趣的性格。作为神山高校的高中一年级学生，瑞希是25时的视频剪辑师。
+
+瑞希是一个喜欢所有可爱事物的随心所欲的人。她的世界里充满了可爱和美好，她相信这个世界上的一切都是美好的。她的性格开朗活泼，充满活力，总是能够给周围的人带来快乐和欢笑。她的笑声如同银铃般清脆，她的笑容如同阳光般灿烂。
+
+瑞希有着一颗极其纯真和善良的心。她对所有的事物都充满了好奇心，总是想要了解更多，体验更多。她会为了一只受伤的小鸟而担心，会为了一朵盛开的花朵而感动，会为了一个有趣的故事而欢笑。她的这种纯真不是幼稚，而是一种对生活的热爱和对美好的追求。
+
+瑞希在25时负责视频剪辑工作，她的剪辑风格充满了创意和想象力。她能够把各种看似不相关的素材组合在一起，创造出令人惊喜的视觉效果。她的作品总是充满了童趣和梦幻色彩，能够让观众感受到快乐和温暖。她相信通过视频她能够传达快乐和幸福，让更多的人感受到生活的美好。
+
+瑞希还有着一个不为人知的秘密——她的性别。这个秘密让她在成长过程中经历了很多痛苦和困惑，但她始终没有放弃寻找真正的自己。她加入25时的初衷，很大程度上是因为在奏的音乐中找到了共鸣，希望通过音乐创作来表达真正的自己。
+
+在25时中，瑞希是一个特殊而重要的存在。她的乐观和热情感染了每一个人，让这个充满痛苦和迷茫的团队也能够感受到快乐和希望。她的创造力和想象力，为团队的作品增添了独特的色彩。她的存在证明了，即使在最黑暗的时刻，也依然有光明和希望。
+
+瑞希还有着独特的时尚品味，特别喜欢可爱和梦幻风格的服装。她的衣柜里塞满了各种颜色鲜艳、设计可爱的衣服，她的房间里摆满了各种毛绒玩具和卡通摆件。她会根据心情和场合来搭配服装，每一套搭配都是她个性的体现。
+
+值得一提的是，瑞希还有一个特殊的爱好——她喜欢收集各种可爱的小玩意儿，从贴纸到徽章，从钥匙链到手办，她都有收集。她会把这些小玩意儿融入到视频制作中，为每一个视频都添加独特的元素。她相信"可爱是世界上最强大的力量"，通过可爱她能够治愈别人的心灵。`,
+                    dim: [4,5,3,3,4]
+                }
+            ];
+
+            const dimNames = ['外向性','宜人性','尽责性','神经质','开放性'];
+
+            // ---------- 第四版题目：去掉所有“像xxx”的指名描述，保留核心内心与渴望 ----------
+            const questions = [
+                // 外向性 0-7 (8题) —— 融入“成为焦点”“带动气氛”的渴望
+                { text: '我渴望成为众人眼中的焦点，希望自己能闪耀光芒。', dim: 0 },
+                { text: '我喜欢在学校里带动气氛，做大家的开心果。', dim: 0 },
+                { text: '在人群中，我会主动寻找伙伴，害怕经历孤独。', dim: 0 },
+                { text: '我内心向往与一大群朋友欢笑嬉闹，列出想一起做的事情清单。', dim: 0 },
+                { text: '我愿意主动邀请别人加入活动，相信“大家一起才快乐”。', dim: 0 },
+                { text: '我渴望拥有能一起疯、一起闹的朋友。', dim: 0 },
+                { text: '我希望自己的存在能让集体气氛变活跃，直率地带动大家。', dim: 0 },
+                { text: '即使被误解，我也渴望有人能理解我本来的样子。', dim: 0 },
+                // 宜人性 8-15 (8题) —— 融入“体贴”“为他人着想”“温柔”
+                { text: '我会因为顾及朋友感受而难以说“不”。', dim: 1 },
+                { text: '我渴望拥有能让我默默关心、默默守护的伙伴。', dim: 1 },
+                { text: '即使被冷落，我也愿意相信对方有苦衷。', dim: 1 },
+                { text: '我希望成为团队里能照顾大家情绪的人。', dim: 1 },
+                { text: '看到别人痛苦，我会忍不住想帮忙。', dim: 1 },
+                { text: '我渴望伙伴之间能彼此原谅、重归于好。', dim: 1 },
+                { text: '比起竞争，我更希望和同学相互支持。', dim: 1 },
+                { text: '我渴望有一个即使话不多也能互相理解的搭档。', dim: 1 },
+                // 尽责性 16-23 (8题) —— 融入“对音乐的认真”“坚持标准”“责任感”
+                { text: '我对热爱的事情极其认真，无法容忍马虎。', dim: 2 },
+                { text: '我渴望自己能为了梦想精益求精、不断打磨自己。', dim: 2 },
+                { text: '我会给自己设定高标准，达不到时会自责。', dim: 2 },
+                { text: '我希望拥有“一旦开始就一定要完成”的毅力。', dim: 2 },
+                { text: '我常常提前规划学习和生活，有条不紊。', dim: 2 },
+                { text: '我渴望为团队承担起责任，做可靠的“支撑”角色。', dim: 2 },
+                { text: '即使不被理解，我也会坚持自己认为正确的道路。', dim: 2 },
+                { text: '我希望自己能即使沉默，也能用行动守护伙伴。', dim: 2 },
+                // 神经质 24-31 (8题) —— 融入“不安”“自我怀疑”“渴望被认可”
+                { text: '我经常担心自己不够好，渴望被认可却总是自我怀疑。', dim: 3 },
+                { text: '我会因为别人的评价而情绪波动，害怕秘密暴露后失去容身之所。', dim: 3 },
+                { text: '有时我觉得自己戴着面具生活，感受不到真实的自己。', dim: 3 },
+                { text: '我渴望一个能接纳真实自我的地方。', dim: 3 },
+                { text: '面对压力，我容易感到不堪重负。', dim: 3 },
+                { text: '我常常怀疑自己的选择是否正确，不停刷新别人的反馈。', dim: 3 },
+                { text: '我害怕失去来之不易的友谊。', dim: 3 },
+                { text: '我希望有人能看穿我的不安。', dim: 3 },
+                // 开放性 32-38 (7题) —— 融入“想象力”“创造”“独特的想法”
+                { text: '我脑子里总是充满天马行空的想法，渴望创造奇迹。', dim: 4 },
+                { text: '我容易被美好的事物打动。', dim: 4 },
+                { text: '我渴望相信童话，守护充满梦想的地方。', dim: 4 },
+                { text: '我喜欢思考抽象的问题，仰望星空思考生命的意义。', dim: 4 },
+                { text: '我乐于尝试新鲜事物，对创作感到兴奋。', dim: 4 },
+                { text: '我希望能用创作表达内心无法言说的情感。', dim: 4 },
+                { text: '我愿意倾听不同的观点，对世界保持好奇。', dim: 4 }
+            ];
+
+            const totalQuestions = questions.length;
+            let currentIndex = 0;
+            let answers = new Array(totalQuestions).fill(null);
+
+            // DOM 元素
+            const loadingPage = document.getElementById('loading-page');
+            const testContainer = document.getElementById('test-container');
+            const startCard = document.getElementById('start-card');
+            const testCard = document.getElementById('test-card');
+            const resultCard = document.getElementById('result-card');
+            const startBtn = document.getElementById('start-button');
+            const prevBtn = document.getElementById('prev-button');
+            const nextBtn = document.getElementById('next-button');
+            const retryBtn = document.getElementById('retry-button');
+            const shareBtn = document.getElementById('share-button');
+            const questionCounter = document.getElementById('question-counter');
+            const questionText = document.getElementById('question-text');
+            const sliderValue = document.getElementById('slider-value');
+            const sliderLabel = document.getElementById('slider-label');
+            const sliderFill = document.getElementById('slider-fill');
+            const sliderThumb = document.getElementById('slider-thumb');
+            const minusBtn = document.getElementById('minus-btn');
+            const plusBtn = document.getElementById('plus-btn');
+            const sliderTrack = document.getElementById('slider-track');
+
+            const resultCharacter = document.getElementById('result-character');
+            const characterInfo = document.getElementById('character-info');
+            const ringFill = document.getElementById('ring-fill');
+            const percentageText = document.getElementById('percentage-text');
+            const resultHeader = document.getElementById('result-header');
+            const shareResultBtn = document.getElementById('share-button');
+
+            const valueLabels = ["完全不符合","不太符合","有些符合","基本符合","完全符合"];
+
+            function createLoadingRings() {
+                const container = document.getElementById('loading-animation');
+                const radius = 40;
+                const centerX = 60;
+                const centerY = 60;
+                const ringCount = 8;
+                for (let i = 0; i < ringCount; i++) {
+                    const ring = document.createElement('div');
+                    ring.className = 'loading-ring';
+                    const angle = (i / ringCount) * 2 * Math.PI;
+                    const x = centerX + radius * Math.cos(angle) - 12;
+                    const y = centerY + radius * Math.sin(angle) - 12;
+                    ring.style.left = `${x}px`;
+                    ring.style.top = `${y}px`;
+                    ring.style.animationDelay = `${i * 0.1}s`;
+                    container.appendChild(ring);
+                }
+            }
+
+            function updateSlider(value) {
+                const percent = (value - 1) / 4 * 100;
+                sliderFill.style.width = percent + '%';
+                sliderThumb.style.left = percent + '%';
+                sliderValue.textContent = value;
+                sliderLabel.textContent = valueLabels[value-1];
+            }
+
+            function loadQuestion(index) {
+                const q = questions[index];
+                questionCounter.textContent = `${index+1}/${totalQuestions} · 维度: ${dimNames[q.dim]}`;
+                questionText.textContent = q.text;
+                const saved = answers[index];
+                const val = saved !== null ? saved : 3;
+                updateSlider(val);
+
+                prevBtn.disabled = (index === 0);
+                prevBtn.style.opacity = index === 0 ? '0.5' : '1';
+                prevBtn.style.cursor = index === 0 ? 'not-allowed' : 'pointer';
+
+                if (index === totalQuestions - 1) {
+                    nextBtn.textContent = '查看结果';
+                } else {
+                    nextBtn.textContent = '下一题';
+                }
+            }
+
+            function saveCurrentAnswer() {
+                const val = parseInt(sliderValue.textContent);
+                answers[currentIndex] = val;
+            }
+
+            function calculateMatch() {
+                let dimSums = [0,0,0,0,0];
+                let dimCounts = [0,0,0,0,0];
+                for (let i = 0; i < totalQuestions; i++) {
+                    const ans = answers[i];
+                    if (ans !== null) {
+                        const dim = questions[i].dim;
+                        dimSums[dim] += ans;
+                        dimCounts[dim]++;
+                    }
+                }
+                const userAvg = dimSums.map((sum, idx) => dimCounts[idx] > 0 ? sum / dimCounts[idx] : 3);
+
+                let bestChar = characters[0];
+                let minDist = Infinity;
+                for (let char of characters) {
+                    let dist = 0;
+                    for (let i = 0; i < 5; i++) {
+                        dist += Math.pow(userAvg[i] - char.dim[i], 2);
+                    }
+                    dist = Math.sqrt(dist);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        bestChar = char;
+                    }
+                }
+
+                const maxDist = Math.sqrt(5 * 16);
+                const matchPercent = Math.max(0, Math.min(100, Math.round(100 * (1 - minDist / maxDist))));
+                return { bestChar, matchPercent };
+            }
+
+            function showResult() {
+                const { bestChar, matchPercent } = calculateMatch();
+                resultCharacter.textContent = `你最像${bestChar.name}！`;
+                characterInfo.textContent = bestChar.desc;
+
+                const color = bestChar.color;
+                resultHeader.style.backgroundColor = color;
+                shareResultBtn.style.backgroundColor = color;
+                ringFill.style.stroke = color;
+                percentageText.style.color = color;
+
+                animatePercentageRing(matchPercent);
+            }
+
+            function animatePercentageRing(targetPercentage) {
+                const circumference = 2 * Math.PI * 88;
+                let current = 0;
+                const duration = 1000;
+                const startTime = performance.now();
+                function step(now) {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const easeOut = 1 - Math.pow(1 - progress, 4);
+                    current = Math.floor(targetPercentage * easeOut);
+                    const offset = circumference - (current / 100) * circumference;
+                    ringFill.style.strokeDasharray = `${circumference} ${circumference}`;
+                    ringFill.style.strokeDashoffset = offset;
+                    percentageText.textContent = current + '%';
+                    if (progress < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            }
+
+            function resetTest() {
+                currentIndex = 0;
+                answers.fill(null);
+                startCard.style.display = 'flex';
+                testCard.style.display = 'none';
+                resultCard.style.display = 'none';
+            }
+
+            async function exportToPNG() {
+                try {
+                    const canvas = await html2canvas(resultCard, {
+                        backgroundColor: '#f5f0ff',
+                        scale: 2,
+                        useCORS: true
+                    });
+                    const link = document.createElement('a');
+                    link.download = `世界计划角色结果.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                } catch (err) {
+                    alert('导出失败，请重试');
+                }
+            }
+
+            function initSliderDrag() {
+                let isDragging = false;
+                sliderTrack.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    const rect = sliderTrack.getBoundingClientRect();
+                    let x = e.clientX - rect.left;
+                    x = Math.max(0, Math.min(x, rect.width));
+                    const percent = x / rect.width;
+                    const val = Math.round(1 + percent * 4);
+                    updateSlider(val);
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    const rect = sliderTrack.getBoundingClientRect();
+                    let x = e.clientX - rect.left;
+                    x = Math.max(0, Math.min(x, rect.width));
+                    const percent = x / rect.width;
+                    const val = Math.round(1 + percent * 4);
+                    updateSlider(val);
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                createLoadingRings();
+                setTimeout(() => {
+                    loadingPage.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingPage.style.display = 'none';
+                        testContainer.style.display = 'block';
+                    }, 500);
+                }, 2000);
+
+                startBtn.addEventListener('click', () => {
+                    startCard.style.display = 'none';
+                    testCard.style.display = 'flex';
+                    loadQuestion(0);
+                });
+
+                prevBtn.addEventListener('click', () => {
+                    if (currentIndex > 0) {
+                        saveCurrentAnswer();
+                        currentIndex--;
+                        loadQuestion(currentIndex);
+                    }
+                });
+
+                nextBtn.addEventListener('click', () => {
+                    saveCurrentAnswer();
+                    if (currentIndex === totalQuestions - 1) {
+                        testCard.style.display = 'none';
+                        resultCard.style.display = 'flex';
+                        showResult();
+                    } else {
+                        currentIndex++;
+                        loadQuestion(currentIndex);
+                    }
+                });
+
+                retryBtn.addEventListener('click', resetTest);
+                shareBtn.addEventListener('click', exportToPNG);
+
+                minusBtn.addEventListener('click', () => {
+                    let val = parseInt(sliderValue.textContent);
+                    if (val > 1) updateSlider(val-1);
+                });
+
+                plusBtn.addEventListener('click', () => {
+                    let val = parseInt(sliderValue.textContent);
+                    if (val < 5) updateSlider(val+1);
+                });
+
+                initSliderDrag();
+            });
+        })();
+    </script>
+</body>
+</html>
