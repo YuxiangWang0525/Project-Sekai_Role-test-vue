@@ -77,5 +77,5 @@ npx playwright install
 
 ## 许可证
 
-原作者[yangzihao1234567](https://github.com/yangzihao1234567)未指定开源许可证，默认其保留所有权利。
+项目逻辑以GNU General Public License v3.0发布
 本项目仅供学习和交流使用，所有角色版权归 SEGA、Colorful Palette 等原公司所有。
