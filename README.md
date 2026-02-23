@@ -50,5 +50,5 @@ npx playwright install
 
 ## License
 
-The original author [yangzihao1234567](https://github.com/yangzihao1234567) has not specified an open source license, and it is assumed that all rights are reserved by the author.
+The project logic is licensed under GNU General Public License v3.0
 This project is solely intended for learning and exchange purposes. All character copyrights belong to SEGA, Colorful Palette, and other original companies.
