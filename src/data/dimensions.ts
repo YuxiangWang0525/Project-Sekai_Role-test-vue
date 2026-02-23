@@ -2,7 +2,7 @@ import type { DimensionName } from './types'
 
 export const DIMENSION_NAMES: DimensionName[] = [
   '外向性',
-  '宜人家',
+  '宜人性',
   '尽责性',
   '神经质',
   '开放性'

@@ -62,10 +62,10 @@ function handleExit() {
     <!-- 测试卡片 -->
     <div v-else class="test-container">
       <QuestionCard
-        :question="testStore.currentQuestion"
-        :dimension-name="testStore.dimensionName"
+        :question="testStore.currentQuestion || { text: '', dim: 0 }"
+        :dimension-name="testStore.dimensionName || '未知维度'"
         :progress="testStore.progress"
-        :current-answer="testStore.answers[testStore.currentIndex]"
+        :current-answer="testStore.answers[testStore.currentIndex] ?? null"
         :can-go-next="testStore.canGoNext"
         :can-go-prev="testStore.canGoPrev"
         :is-last-question="testStore.isLastQuestion"

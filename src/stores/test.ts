@@ -14,14 +14,20 @@ export const useTestStore = defineStore('test', () => {
 
   // 计算属性
   const totalQuestions = computed(() => QUESTIONS.length)
-  const currentQuestion = computed(() => QUESTIONS[currentIndex.value])
+  const currentQuestion = computed(() => QUESTIONS[currentIndex.value] || QUESTIONS[0])
   const progress = computed(() => `${currentIndex.value + 1}/${totalQuestions.value}`)
-  const dimensionName = computed(() => DIMENSION_NAMES[QUESTIONS[currentIndex.value]?.dim] || '')
+  const dimensionName = computed(() => {
+    const question = QUESTIONS[currentIndex.value]
+    if (question && question.dim < DIMENSION_NAMES.length) {
+      return DIMENSION_NAMES[question.dim]
+    }
+    return DIMENSION_NAMES[0] || ''
+  })
   
   const canGoNext = computed(() => {
     // 如果当前题目已有答案，或者有默认值（非null），则可以继续
     const currentAnswer = answers.value[currentIndex.value]
-    return currentAnswer !== null && currentAnswer >= 1 && currentAnswer <= 5
+    return currentAnswer !== null && typeof currentAnswer === 'number' && currentAnswer >= 1 && currentAnswer <= 5
   })
   
   const canGoPrev = computed(() => {
@@ -40,25 +46,41 @@ export const useTestStore = defineStore('test', () => {
     // 计算用户各维度平均值
     for (let i = 0; i < QUESTIONS.length; i++) {
       const ans = answers.value[i]
-      if (ans !== null) {
-        const dim = QUESTIONS[i].dim
-        dimSums[dim] += ans
-        dimCounts[dim]++
+      const question = QUESTIONS[i]
+      if (ans !== null && question) {
+        const dim = question.dim
+        if (dim < dimSums.length && dim < dimCounts.length && 
+            dimSums[dim] !== undefined && dimCounts[dim] !== undefined &&
+            ans !== undefined) {
+          dimSums[dim]! += ans
+          dimCounts[dim]!++
+        }
       }
     }
     
-    const userAvg = dimSums.map((sum, idx) => 
-      dimCounts[idx] > 0 ? sum / dimCounts[idx] : 3
-    )
+    const userAvg = dimSums.map((sum, idx) => {
+      const count = dimCounts[idx]
+      return count && count > 0 ? sum / count : 3
+    })
     
     // 计算最匹配的角色
-    let bestChar: Character = CHARACTERS[0]
+    let bestChar: Character = CHARACTERS[0] || { 
+      id: 'unknown', 
+      name: '未知角色', 
+      color: '#CCCCCC', 
+      desc: '暂无描述', 
+      dim: [3, 3, 3, 3, 3] 
+    }
     let minDist = Infinity
     
     for (const char of CHARACTERS) {
       let dist = 0
       for (let i = 0; i < 5; i++) {
-        dist += Math.pow(userAvg[i] - char.dim[i], 2)
+        const userVal = userAvg[i]
+        const charVal = char.dim[i]
+        if (typeof userVal === 'number' && typeof charVal === 'number') {
+          dist += Math.pow(userVal - charVal, 2)
+        }
       }
       dist = Math.sqrt(dist)
       
