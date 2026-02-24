@@ -4,6 +4,7 @@ import type { TestState, MatchResult, Character } from '@/data'
 import { QUESTIONS, CHARACTERS, DIMENSION_NAMES } from '@/data'
 
 const STORAGE_KEY = 'sekai-role-test-progress'
+const RESULT_STORAGE_KEY = 'sekai-role-test-result'
 
 export const useTestStore = defineStore('test', () => {
   // 状态
@@ -23,17 +24,17 @@ export const useTestStore = defineStore('test', () => {
     }
     return DIMENSION_NAMES[0] || ''
   })
-  
+
   const canGoNext = computed(() => {
     // 如果当前题目已有答案，或者有默认值（非null），则可以继续
     const currentAnswer = answers.value[currentIndex.value]
     return currentAnswer !== null && typeof currentAnswer === 'number' && currentAnswer >= 1 && currentAnswer <= 5
   })
-  
+
   const canGoPrev = computed(() => {
     return currentIndex.value > 0
   })
-  
+
   const isLastQuestion = computed(() => {
     return currentIndex.value === totalQuestions.value - 1
   })
@@ -42,14 +43,14 @@ export const useTestStore = defineStore('test', () => {
   const matchResult = computed((): MatchResult => {
     const dimSums = [0, 0, 0, 0, 0]
     const dimCounts = [0, 0, 0, 0, 0]
-    
+
     // 计算用户各维度平均值
     for (let i = 0; i < QUESTIONS.length; i++) {
       const ans = answers.value[i]
       const question = QUESTIONS[i]
       if (ans !== null && question) {
         const dim = question.dim
-        if (dim < dimSums.length && dim < dimCounts.length && 
+        if (dim < dimSums.length && dim < dimCounts.length &&
             dimSums[dim] !== undefined && dimCounts[dim] !== undefined &&
             ans !== undefined) {
           dimSums[dim]! += ans
@@ -57,22 +58,22 @@ export const useTestStore = defineStore('test', () => {
         }
       }
     }
-    
+
     const userAvg = dimSums.map((sum, idx) => {
       const count = dimCounts[idx]
       return count && count > 0 ? sum / count : 3
     })
-    
+
     // 计算最匹配的角色
-    let bestChar: Character = CHARACTERS[0] || { 
-      id: 'unknown', 
-      name: '未知角色', 
-      color: '#CCCCCC', 
-      desc: '暂无描述', 
-      dim: [3, 3, 3, 3, 3] 
+    let bestChar: Character = CHARACTERS[0] || {
+      id: 'unknown',
+      name: '未知角色',
+      color: '#CCCCCC',
+      desc: '暂无描述',
+      dim: [3, 3, 3, 3, 3]
     }
     let minDist = Infinity
-    
+
     for (const char of CHARACTERS) {
       let dist = 0
       for (let i = 0; i < 5; i++) {
@@ -83,17 +84,17 @@ export const useTestStore = defineStore('test', () => {
         }
       }
       dist = Math.sqrt(dist)
-      
+
       if (dist < minDist) {
         minDist = dist
         bestChar = char
       }
     }
-    
+
     // 计算匹配百分比
     const maxDist = Math.sqrt(5 * 16)
     const matchPercent = Math.max(0, Math.min(100, Math.round(100 * (1 - minDist / maxDist))))
-    
+
     return {
       character: bestChar,
       percentage: matchPercent
@@ -104,35 +105,44 @@ export const useTestStore = defineStore('test', () => {
   function setAnswer(value: number) {
     answers.value[currentIndex.value] = value
   }
-  
+
   function goToNext() {
     if (canGoNext.value && currentIndex.value < totalQuestions.value - 1) {
       currentIndex.value++
       saveProgress() // 切换题目时保存进度
     }
   }
-  
+
   function goToPrev() {
     if (canGoPrev.value) {
       currentIndex.value--
       saveProgress() // 切换题目时保存进度
     }
   }
-  
+
   function completeTest() {
     isCompleted.value = true
     timestamp.value = Date.now()
-    saveProgress()
+    // 保存结果信息
+    const resultInfo = {
+      matchResult: matchResult.value,
+      timestamp: timestamp.value,
+      answers: [...answers.value]
+    }
+    localStorage.setItem(RESULT_STORAGE_KEY, JSON.stringify(resultInfo))
+    // 清除进度信息但保留结果
+    localStorage.removeItem(STORAGE_KEY)
   }
-  
+
   function resetTest() {
     currentIndex.value = 0
     answers.value = new Array(QUESTIONS.length).fill(null)
     isCompleted.value = false
     timestamp.value = undefined
     localStorage.removeItem(STORAGE_KEY)
+    // 不清除结果信息，让用户可以选择查看历史结果
   }
-  
+
   function saveProgress() {
     // 确保有timestamp
     if (!timestamp.value) {
@@ -146,7 +156,7 @@ export const useTestStore = defineStore('test', () => {
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
   }
-  
+
   function loadProgress(): boolean {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved) {
@@ -157,7 +167,7 @@ export const useTestStore = defineStore('test', () => {
           localStorage.removeItem(STORAGE_KEY)
           return false
         }
-        
+
         currentIndex.value = state.currentIndex
         answers.value = [...state.answers]
         isCompleted.value = state.isCompleted
@@ -170,10 +180,9 @@ export const useTestStore = defineStore('test', () => {
     }
     return false
   }
-  
+
   function hasSavedProgress(): boolean {
     const saved = localStorage.getItem(STORAGE_KEY)
-    console.log('检查保存进度 - localStorage数据:', saved)
     if (saved) {
       try {
         const state: TestState = JSON.parse(saved)
@@ -185,8 +194,42 @@ export const useTestStore = defineStore('test', () => {
         localStorage.removeItem(STORAGE_KEY)
       }
     }
-    console.log('没有找到保存的进度')
     return false
+  }
+
+  function hasRecentResult(): boolean {
+    const saved = localStorage.getItem(RESULT_STORAGE_KEY)
+    if (saved) {
+      try {
+        const resultInfo = JSON.parse(saved)
+        const isValid = Date.now() - (resultInfo.timestamp || 0) <= 24 * 60 * 60 * 1000
+        return isValid
+      } catch (e) {
+        console.error('解析保存结果失败:', e)
+        localStorage.removeItem(RESULT_STORAGE_KEY)
+      }
+    }
+    return false
+  }
+
+  function getLastResult() {
+    const saved = localStorage.getItem(RESULT_STORAGE_KEY)
+    if (saved) {
+      try {
+        const resultInfo = JSON.parse(saved)
+        if (Date.now() - (resultInfo.timestamp || 0) <= 24 * 60 * 60 * 1000) {
+          return resultInfo.matchResult
+        }
+      } catch (e) {
+        console.error('获取最近结果失败:', e)
+        localStorage.removeItem(RESULT_STORAGE_KEY)
+      }
+    }
+    return null
+  }
+
+  function clearResult() {
+    localStorage.removeItem(RESULT_STORAGE_KEY)
   }
 
   return {
@@ -195,7 +238,7 @@ export const useTestStore = defineStore('test', () => {
     answers,
     isCompleted,
     timestamp,
-    
+
     // 计算属性
     totalQuestions,
     currentQuestion,
@@ -205,7 +248,7 @@ export const useTestStore = defineStore('test', () => {
     canGoPrev,
     isLastQuestion,
     matchResult,
-    
+
     // 方法
     setAnswer,
     goToNext,
@@ -214,6 +257,9 @@ export const useTestStore = defineStore('test', () => {
     resetTest,
     saveProgress,
     loadProgress,
-    hasSavedProgress
+    hasSavedProgress,
+    hasRecentResult,
+    getLastResult,
+    clearResult
   }
 })

@@ -10,10 +10,29 @@ const testStore = useTestStore()
 const showAnimation = ref(false)
 
 onMounted(() => {
-  if (!testStore.isCompleted) {
+  console.log('ResultView mounted - isCompleted:', testStore.isCompleted, 'hasRecentResult:', testStore.hasRecentResult())
+  
+  // 检查是否完成测试或有最近结果
+  const hasCompletedTest = testStore.isCompleted || testStore.hasRecentResult()
+  
+  if (!hasCompletedTest) {
+    console.log('没有完成的测试，返回首页')
     router.push('/')
     return
   }
+  
+  // 如果有最近结果但isCompleted为false，从结果中恢复数据
+  if (testStore.hasRecentResult() && !testStore.isCompleted) {
+    const lastResult = testStore.getLastResult()
+    if (lastResult) {
+      console.log('从最近结果恢复数据:', lastResult)
+      // 设置完成状态
+      testStore.isCompleted = true
+    }
+  }
+  
+  console.log('准备显示结果，matchResult:', testStore.matchResult)
+  
   // 延迟显示动画效果
   setTimeout(() => {
     showAnimation.value = true
@@ -22,6 +41,7 @@ onMounted(() => {
 
 function handleRetry() {
   testStore.resetTest()
+  testStore.clearResult() // 清除历史结果
   router.push('/')
 }
 

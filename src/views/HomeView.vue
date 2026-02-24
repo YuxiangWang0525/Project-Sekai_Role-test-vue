@@ -8,42 +8,55 @@ const router = useRouter()
 const testStore = useTestStore()
 
 const showResumeDialog = ref(false)
+const showResultDialog = ref(false)
 
 // 在组件挂载后检查进度
 import { onMounted } from 'vue'
-onMounted(() => {
+onMounted(async () => {
+
   // 检查是否有未完成的保存进度
   const hasProgress = testStore.hasSavedProgress()
+  const hasRecentResult = testStore.hasRecentResult()
   const isCompleted = testStore.isCompleted
-  
-  console.log('首页检查进度 - 有进度:', hasProgress, '已完成:', isCompleted)
-  
-  // 只有当有保存进度且测试未完成时才显示恢复对话框
-  showResumeDialog.value = hasProgress && !isCompleted
+
+  // 优先检查是否有最近完成的结果
+
+  if (hasRecentResult && !hasProgress) {
+    showResultDialog.value = true
+  } else if (hasProgress && !isCompleted) {
+    // 只有当有保存进度且测试未完成时才显示恢复对话框
+    showResumeDialog.value = true
+  }
+
+
+  // 添加一个小延迟确保DOM更新
+  await new Promise(resolve => setTimeout(resolve, 100))
+
 })
 const isResuming = ref(false)
 
 function handleStart(resume: boolean = false) {
-  console.log('handleStart called with resume:', resume)
   isResuming.value = resume
   if (resume) {
-    const loaded = testStore.loadProgress()
-    console.log('加载进度结果:', loaded)
+    testStore.loadProgress()
   } else {
     testStore.resetTest()
-    console.log('重置测试')
   }
-  console.log('准备跳转到测试页面')
-  router.push('/test').then(() => {
-    console.log('路由跳转完成')
-  }).catch(err => {
-    console.error('路由跳转失败:', err)
-  })
+  router.push('/test')
 }
 
 function handleCancel() {
   showResumeDialog.value = false
   testStore.resetTest()
+}
+
+function handleViewResult() {
+  router.push('/result')
+}
+
+function handleDismissResult() {
+  showResultDialog.value = false
+  testStore.clearResult()
 }
 </script>
 
@@ -57,11 +70,11 @@ function handleCancel() {
   </div>
 
   <div id="test-container">
-    <StartCard 
-      v-if="!showResumeDialog"
+    <StartCard
+      v-if="!showResumeDialog && !showResultDialog"
       @start="handleStart(false)"
     />
-    
+
     <!-- 恢复进度对话框 -->
     <div v-if="showResumeDialog" class="resume-dialog-overlay">
       <div class="resume-dialog">
@@ -74,6 +87,24 @@ function handleCancel() {
             </button>
             <button class="test-button primary-button" @click="handleStart(true)">
               继续测试
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 结果提醒对话框 -->
+    <div v-if="showResultDialog" class="resume-dialog-overlay">
+      <div class="resume-dialog">
+        <div class="dialog-content">
+          <h3>您近期已进行过测评</h3>
+          <p>是否查看最后一次测评结果？</p>
+          <div class="dialog-actions">
+            <button class="test-button secondary-button" @click="handleDismissResult">
+              不，谢谢
+            </button>
+            <button class="test-button primary-button" @click="handleViewResult">
+              查看结果
             </button>
           </div>
         </div>

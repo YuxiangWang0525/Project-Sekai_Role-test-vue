@@ -39,6 +39,7 @@ jobs:
       run: npm run build
       env:
         NODE_ENV: production
+        GITHUB_ACTIONS: true
 
   deploy:
     needs: test
@@ -71,6 +72,7 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          GITHUB_ACTIONS: true
           
       - name: Setup Pages
         uses: actions/configure-pages@v5

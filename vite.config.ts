@@ -15,8 +15,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
-  // GitHub Pages 配置
-  base: process.env.NODE_ENV === 'production' ? '/Project-Sekai_Role-test-vue/' : '/',
+  // GitHub Pages 配置 - 只在GitHub Actions部署时设置子目录
+  base: process.env.GITHUB_ACTIONS === 'true' ? '/Project-Sekai_Role-test-vue/' : '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

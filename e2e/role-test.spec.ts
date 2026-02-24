@@ -41,8 +41,8 @@ test.describe('Project Sekai Role Test', () => {
     await page.getByText('下一题').click()
     
     // 检查进度是否更新
-    const updatedProgress = await page.getByText(/\d+\/\d+/).textContent()
-    expect(updatedProgress).not.toBe(initialProgress)
+    const updatedProgress = page.getByText(/\d+\/\d+/)
+    await expect(updatedProgress).not.toHaveText(initialProgress)
     
     // 测试上一题按钮（应该被禁用）
     const prevButton = page.getByText('上一题')
@@ -120,5 +120,163 @@ test.describe('Project Sekai Role Test', () => {
     await expect(page.getByText('维度:')).toBeVisible()
     const progress = await page.getByText(/\d+\/\d+/).textContent()
     expect(progress).toContain('3/') // 应该在第3题附近
+  })
+  
+  test('should show result reminder after completing test', async ({ page }) => {
+    // 先完成一次测试
+    await page.getByText('开始测试').click()
+    await page.waitForURL('/test')
+    
+    // 快速完成测试
+    for (let i = 0; i < 39; i++) {
+      await page.getByText('有些符合').click()
+      if (i < 38) {
+        await page.getByText('下一题').click()
+      } else {
+        await page.getByText('查看结果').click()
+      }
+    }
+    
+    await page.waitForURL('/result')
+    await expect(page.getByText('测试结果')).toBeVisible()
+    
+    // 返回首页
+    await page.goto('/')
+    
+    // 应该显示结果提醒对话框
+    await expect(page.getByText('您近期已进行过测评')).toBeVisible()
+    await expect(page.getByText('查看结果')).toBeVisible()
+    await expect(page.getByText('不，谢谢')).toBeVisible()
+  })
+  
+  test('should navigate to result when clicking view result', async ({ page }) => {
+    // 先完成一次测试
+    await page.getByText('开始测试').click()
+    await page.waitForURL('/test')
+    
+    // 快速完成测试
+    for (let i = 0; i < 39; i++) {
+      await page.getByText('有些符合').click()
+      if (i < 38) {
+        await page.getByText('下一题').click()
+      } else {
+        await page.getByText('查看结果').click()
+      }
+    }
+    
+    await page.waitForURL('/result')
+    
+    // 返回首页
+    await page.goto('/')
+    
+    // 点击查看结果
+    await page.getByText('查看结果').click()
+    
+    // 应该导航到结果页面
+    await page.waitForURL('/result')
+    await expect(page.getByText('测试结果')).toBeVisible()
+  })
+  
+  test('should dismiss result reminder and show start card', async ({ page }) => {
+    // 先完成一次测试
+    await page.getByText('开始测试').click()
+    await page.waitForURL('/test')
+    
+    // 快速完成测试
+    for (let i = 0; i < 39; i++) {
+      await page.getByText('有些符合').click()
+      if (i < 38) {
+        await page.getByText('下一题').click()
+      } else {
+        await page.getByText('查看结果').click()
+      }
+    }
+    
+    await page.waitForURL('/result')
+    
+    // 返回首页
+    await page.goto('/')
+    
+    // 点击不，谢谢
+    await page.getByText('不，谢谢').click()
+    
+    // 对话框应该消失，显示开始卡片
+    await expect(page.getByText('您近期已进行过测评')).toBeHidden()
+    await expect(page.getByText('开始测试')).toBeVisible()
+  })
+  
+  test('should prioritize result reminder over resume dialog', async ({ page }) => {
+    // 先完成一次测试
+    await page.getByText('开始测试').click()
+    await page.waitForURL('/test')
+    
+    // 快速完成测试
+    for (let i = 0; i < 39; i++) {
+      await page.getByText('有些符合').click()
+      if (i < 38) {
+        await page.getByText('下一题').click()
+      } else {
+        await page.getByText('查看结果').click()
+      }
+    }
+    
+    await page.waitForURL('/result')
+    
+    // 开始一个新的测试但不完成
+    await page.goto('/')
+    await page.getByText('开始测试').click()
+    await page.waitForURL('/test')
+    
+    // 回答几道题
+    await page.getByText('有些符合').click()
+    await page.getByText('下一题').click()
+    
+    // 返回首页
+    await page.goto('/')
+    
+    // 应该显示结果提醒而不是恢复对话框
+    await expect(page.getByText('您近期已进行过测评')).toBeVisible()
+    await expect(page.getByText('检测到未完成的测试')).toBeHidden()
+  })
+  
+  test('should clear progress but keep result after completion', async ({ page }) => {
+    // 开始测试并回答几道题
+    await page.getByText('开始测试').click()
+    await page.waitForURL('/test')
+    
+    await page.getByText('有些符合').click()
+    await page.getByText('下一题').click()
+    
+    await page.getByText('基本符合').click()
+    await page.getByText('下一题').click()
+    
+    // 直接前往首页（模拟意外退出）
+    await page.goto('/')
+    
+    // 应该显示恢复对话框
+    await expect(page.getByText('检测到未完成的测试')).toBeVisible()
+    
+    // 继续测试并完成
+    await page.getByText('继续测试').click()
+    await page.waitForURL('/test')
+    
+    // 完成剩余题目
+    for (let i = 2; i < 39; i++) {
+      await page.getByText('有些符合').click()
+      if (i < 38) {
+        await page.getByText('下一题').click()
+      } else {
+        await page.getByText('查看结果').click()
+      }
+    }
+    
+    await page.waitForURL('/result')
+    
+    // 返回首页
+    await page.goto('/')
+    
+    // 应该显示结果提醒（进度已清除）
+    await expect(page.getByText('您近期已进行过测评')).toBeVisible()
+    await expect(page.getByText('检测到未完成的测试')).toBeHidden()
   })
 })

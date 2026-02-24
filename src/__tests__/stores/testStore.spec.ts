@@ -107,16 +107,32 @@ describe('Test Store', () => {
     expect(store.canGoNext).toBe(true)
   })
 
-  it('should complete test', () => {
+  it('should complete test and handle result storage', () => {
     const store = useTestStore()
     
     const now = Date.now()
     vi.setSystemTime(now)
     
+    // 设置一些答案以便计算结果
+    store.answers = [3, 4, 2, 5, 1, ...new Array(QUESTIONS.length - 5).fill(3)]
+    
     store.completeTest()
     
     expect(store.isCompleted).toBe(true)
     expect(store.timestamp).toBe(now)
+    
+    // 验证进度已被清除但结果已保存
+    const progressData = localStorage.getItem('sekai-role-test-progress')
+    const resultData = localStorage.getItem('sekai-role-test-result')
+    
+    expect(progressData).toBeFalsy()
+    expect(resultData).toBeTruthy()
+    
+    // 验证结果数据包含必要字段
+    const parsedResult = JSON.parse(resultData!)
+    expect(parsedResult.timestamp).toBe(now)
+    expect(parsedResult.matchResult).toBeDefined()
+    expect(parsedResult.answers).toBeDefined()
   })
 
   it('should calculate match result correctly', () => {
@@ -160,12 +176,57 @@ describe('Test Store', () => {
     expect(newStore.answers[0]).toBe(3)
     expect(newStore.answers[5]).toBe(3)
   })
+  
+  it('should clear result when requested', () => {
+    const store = useTestStore()
+    
+    // 保存一个结果
+    const mockResult = {
+      character: CHARACTERS[0],
+      percentage: 85
+    }
+    localStorage.setItem('sekai-role-test-result', JSON.stringify({
+      matchResult: mockResult,
+      timestamp: Date.now(),
+      answers: [3, 4, 2, 5, 1]
+    }))
+    
+    expect(store.hasRecentResult()).toBe(true)
+    
+    // 清除结果
+    store.clearResult()
+    
+    expect(store.hasRecentResult()).toBe(false)
+    expect(localStorage.getItem('sekai-role-test-result')).toBeFalsy()
+  })
+  
+  it('should handle expired results', () => {
+    const store = useTestStore()
+    
+    // 保存一个过期的结果（25小时前）
+    const oldTimestamp = Date.now() - (25 * 60 * 60 * 1000)
+    const mockResult = {
+      character: CHARACTERS[0],
+      percentage: 85
+    }
+    localStorage.setItem('sekai-role-test-result', JSON.stringify({
+      matchResult: mockResult,
+      timestamp: oldTimestamp,
+      answers: [3, 4, 2, 5, 1]
+    }))
+    
+    expect(store.hasRecentResult()).toBe(false) // 应该被认为是过期的
+    
+    // 获取结果应该返回null
+    expect(store.getLastResult()).toBeNull()
+  })
 
-  it('should detect saved progress', () => {
+  it('should detect saved progress and recent results', () => {
     const store = useTestStore()
     
     // 没有保存进度时
     expect(store.hasSavedProgress()).toBe(false)
+    expect(store.hasRecentResult()).toBe(false)
     
     // 保存进度后
     store.saveProgress()
@@ -175,9 +236,24 @@ describe('Test Store', () => {
     expect(savedData).toBeTruthy()
     
     expect(store.hasSavedProgress()).toBe(true)
+    expect(store.hasRecentResult()).toBe(false)
+    
+    // 保存结果后
+    const now = Date.now()
+    vi.setSystemTime(now)
+    store.completeTest()
+    
+    expect(store.hasSavedProgress()).toBe(false) // 进度应该被清除
+    expect(store.hasRecentResult()).toBe(true) // 应该有最近结果
+    
+    // 获取最近结果
+    const lastResult = store.getLastResult()
+    expect(lastResult).toBeDefined()
+    expect(lastResult!.character).toBeDefined()
+    expect(lastResult!.percentage).toBeDefined()
   })
 
-  it('should reset test properly', () => {
+  it('should reset test properly without clearing results', () => {
     const store = useTestStore()
     
     // 设置一些状态
@@ -185,10 +261,25 @@ describe('Test Store', () => {
     store.answers[0] = 3
     store.isCompleted = true
     
+    // 保存一个结果
+    const mockResult = {
+      character: CHARACTERS[0],
+      percentage: 85
+    }
+    localStorage.setItem('sekai-role-test-result', JSON.stringify({
+      matchResult: mockResult,
+      timestamp: Date.now(),
+      answers: [3, 4, 2, 5, 1]
+    }))
+    
     store.resetTest()
     
     expect(store.currentIndex).toBe(0)
     expect(store.answers.every(a => a === null)).toBe(true)
     expect(store.isCompleted).toBe(false)
+    
+    // 验证结果数据仍然存在
+    const resultData = localStorage.getItem('sekai-role-test-result')
+    expect(resultData).toBeTruthy()
   })
 })
