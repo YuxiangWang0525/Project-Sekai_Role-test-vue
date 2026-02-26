@@ -8,6 +8,8 @@ This is a refactoring project for Project-Sekai_Role-test, based on Vue 3 and Ty
 - Switch to the Vue.js framework
 - Use TypeScript and ESLint.
 - Save in case of accidental refresh or exit
+- Chart now use AntV G2. not manual calculation.
+- Share picture now add copyright text.
 - html2canvas is now provided as a ES module
 - Code humanly
 - i18n support
@@ -22,6 +24,8 @@ This is a refactoring project for Project-Sekai_Role-test, based on Vue 3 and Ty
 - **Vitest**
 - **Playwright**
 - **html2canvas**
+- **Vue i18n**
+- **AntV G2**
 
 ## 📦 Install and running
 

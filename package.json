@@ -17,6 +17,7 @@
     "format": "oxfmt src/"
   },
   "dependencies": {
+    "@antv/g2": "^5.4.8",
     "html2canvas": "^1.4.1",
     "pinia": "^3.0.4",
     "vue": "^3.5.28",

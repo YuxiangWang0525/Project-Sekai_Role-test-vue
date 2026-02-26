@@ -171,7 +171,6 @@ function handleDismissResult() {
 #test-container {
   width: 100%;
   max-width: 800px;
-  min-height: 500px;
   background-color: #f8f8f8;
   border-radius: 12px;
   overflow: hidden;

@@ -1,8 +1,30 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import StartCard from '@/components/StartCard.vue'
 
+// Mock localStorage
+const localStorageMock = (() => {
+  let store: Record<string, string> = {}
+  return {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => { store[key] = value.toString() },
+    removeItem: (key: string) => { delete store[key] },
+    clear: () => { store = {} }
+  }
+})()
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+  writable: true
+})
+
 describe('StartCard', () => {
+  beforeEach(() => {
+    // 设置 Pinia 实例
+    setActivePinia(createPinia())
+  })
+
   it('should render correctly', () => {
     const wrapper = mount(StartCard)
     

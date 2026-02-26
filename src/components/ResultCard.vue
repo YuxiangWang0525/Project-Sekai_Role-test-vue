@@ -1,63 +1,96 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, computed, nextTick } from 'vue'
 import html2canvas from 'html2canvas'
-import type { MatchResult } from '@/data'
+import type { MatchResult, Character } from '@/data'
+import type { ExtendedMatchResult } from '@/stores/test'
+import { useTestStore } from '@/stores/test'
+import PercentageChart from './PercentageChart.vue'
+import PieChart from './RatioChart.vue'
 
 interface Props {
   matchResult: MatchResult
+  otherMatches: ExtendedMatchResult[]
   showAnimation: boolean
+  isBestMatch: boolean
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits<{
-  (e: 'retry'): void
-  (e: 'share'): void
-}>()
 
-const currentPercentage = ref(0)
-const circumference = 2 * Math.PI * 88
+const is_screenshot_show = ref(false)
+const testStore = useTestStore()
 
-watch(() => props.showAnimation, (newVal) => {
-  if (newVal) {
-    animatePercentage()
+// 移除手动动画逻辑，直接使用实际百分比
+const currentPercentage = computed(() => displayPercentage.value)
+const selectedCharacter = ref<Character | null>(null)
+
+// 计算显示的字符和百分比
+const displayCharacter = computed(() => selectedCharacter.value || props.matchResult.character)
+const displayPercentage = computed(() => {
+  if (selectedCharacter.value) {
+    const match = props.otherMatches.find(m => m.character.id === selectedCharacter.value?.id)
+    return match ? match.percentage : props.matchResult.percentage
   }
+  return props.matchResult.percentage
 })
 
-function animatePercentage() {
-  const target = props.matchResult.percentage
-  const duration = 1000
-  const startTime = Date.now()
-  
-  const step = () => {
-    const elapsed = Date.now() - startTime
-    const progress = Math.min(elapsed / duration, 1)
-    const easeOut = 1 - Math.pow(1 - progress, 4)
-    currentPercentage.value = Math.floor(target * easeOut)
-    
-    if (progress < 1) {
-      requestAnimationFrame(step)
-    }
+// 计算标题文案
+const titleText = computed(() => {
+  const nickname = testStore.nickname || '你'
+  console.log('计算titleText:', {
+    nickname: nickname,
+    selectedCharacter: selectedCharacter.value?.name,
+    isBestMatch: props.isBestMatch,
+    matchResultName: props.matchResult.character.name
+  })
+
+  if (selectedCharacter.value) {
+    return `${nickname}也很像${selectedCharacter.value.name}!`
   }
-  
-  requestAnimationFrame(step)
+  return props.isBestMatch ? 
+    `${nickname}最像${props.matchResult.character.name}！` : 
+    `${nickname}也像${props.matchResult.character.name}`
+})
+
+// 移除手动动画相关逻辑
+watch(() => props.matchResult, () => {
+  // 当主要匹配结果改变时，重置选择
+  selectedCharacter.value = null
+})
+
+// 移除手动动画函数
+
+function handleCharacterSelect(match: ExtendedMatchResult) {
+  selectedCharacter.value = match.character
+}
+
+function resetToBestMatch() {
+  selectedCharacter.value = null
 }
 
 async function handleShare() {
+  is_screenshot_show.value = true;
+  
+  // 等待 Vue 完成 DOM 更新
+  await nextTick();
+  
   try {
     const resultCard = document.querySelector('.test-card') as HTMLElement
     if (resultCard) {
       const canvas = await html2canvas(resultCard, {
         backgroundColor: '#f5f0ff',
         scale: 2,
-        useCORS: true
+        useCORS: true,
+        // 确保等待所有内容渲染完成
+        logging: false,
+        letterRendering: true
       })
-      
+
       // 创建下载链接
       const link = document.createElement('a')
       link.download = `世界计划角色结果_${new Date().getTime()}.png`
       link.href = canvas.toDataURL('image/png')
       link.click()
-      
+
       // 同时复制到剪贴板（如果支持）
       if (navigator.clipboard && window.ClipboardItem) {
         canvas.toBlob(async (blob) => {
@@ -76,50 +109,80 @@ async function handleShare() {
   } catch (err) {
     console.error('导出失败:', err)
     alert('导出失败，请重试')
+  } finally {
+    // 确保状态最终会被重置
+    setTimeout(() => {
+      is_screenshot_show.value = false;
+    }, 100);
   }
 }
+// console.log(props.otherMatches);
+const options = JSON.parse(localStorage.getItem('sekai-role-test-options'))
+// const useWeightedMode = options.useWeightedMode;
+const useMultiResultMode = options.useMultiResultMode;
 </script>
 
 <template>
   <div class="test-card" id="result-card">
-    <div 
-      class="question-section" 
-      :style="{ backgroundColor: matchResult.character.color }"
+    <div
+      class="question-section"
+      :style="{ backgroundColor: displayCharacter.color }"
     >
       <div class="result-title">测试结果</div>
-      <div class="result-character">你最像{{ matchResult.character.name }}！</div>
+      <div class="result-character">{{ titleText }}</div>
     </div>
     <div class="answer-section">
-      <div class="percentage-ring-container">
-        <svg class="percentage-ring-svg" viewBox="0 0 200 200">
-          <circle class="percentage-ring-bg" cx="100" cy="100" r="88"></circle>
-          <circle 
-            class="percentage-ring-fill" 
-            cx="100" 
-            cy="100" 
-            r="88"
-            :stroke="matchResult.character.color"
-            :stroke-dasharray="`${(currentPercentage / 100) * circumference} ${circumference}`"
-            :stroke-dashoffset="0"
-          ></circle>
-        </svg>
-        <div 
-          class="percentage-text" 
-          :style="{ color: matchResult.character.color }"
-        >
-          {{ currentPercentage }}%
+      <PercentageChart
+        :percentage="currentPercentage"
+        :color="displayCharacter.color"
+      />
+
+      <div class="character-info">
+        {{ displayCharacter.desc }}
+      </div>
+
+      <!-- 其他高匹配角色按钮区域 -->
+      <div v-if="useMultiResultMode" class="other-matches">
+        <div class="matches-title">其他高匹配角色：</div>
+        <div class="match-buttons">
+          <button
+            v-for="match in otherMatches"
+            :key="match.character.id"
+            class="match-btn"
+            :class="{ active: selectedCharacter?.id === match.character.id }"
+            @click="handleCharacterSelect(match)"
+          >
+            {{ match.character.name }} ({{ match.percentage }}%)
+          </button>
+          <button
+            v-if="selectedCharacter"
+            class="match-btn reset-btn"
+            @click="resetToBestMatch"
+          >
+            ← 返回最佳匹配
+          </button>
         </div>
       </div>
-      <div class="character-info">
-        {{ matchResult.character.desc }}
+
+      <!-- 饼图展示 -->
+      <PieChart
+        v-if="useMultiResultMode"
+        :matches="otherMatches"
+        @character-select="handleCharacterSelect"
+      />
+      <!-- 截图版权信息 -->
+      <div class="copyrights_screenshot" v-show="is_screenshot_show">
+        <p>Generated by Project SEKAI Role Test(Vue 3)<br>Released Under GPL v3 License</p>
       </div>
-      <div class="result-buttons">
+      
+      <!-- 操作按钮 -->
+      <div class="result-buttons" v-show="!is_screenshot_show">
         <button class="test-button secondary-button" @click="$emit('retry')">
           重新测试
         </button>
-        <button 
-          class="test-button primary-button" 
-          :style="{ backgroundColor: matchResult.character.color }"
+        <button
+          class="test-button primary-button"
+          :style="{ backgroundColor: displayCharacter.color }"
           @click="handleShare"
         >
           分享结果
@@ -130,16 +193,32 @@ async function handleShare() {
 </template>
 
 <style scoped>
+.copyrights_screenshot {
+  text-align: center;
+  margin-top: 30px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+}
+
+.copyrights_screenshot p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
 .test-card {
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow: hidden;
 }
 
 .question-section {
   color: white;
   padding: 40px 30px;
-  min-height: 25%;
+  min-height: 120px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -159,17 +238,17 @@ async function handleShare() {
   font-size: 26px;
   font-weight: bold;
   margin: 25px 0;
-  color: #4A4A6A;
   font-family: '黑体', sans-serif;
+  transition: color 0.3s ease;
 }
 
 .answer-section {
-  flex: 1;
   padding: 40px 30px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 20px;
   background-color: #f5f0ff;
+  /* 关键修复：改为传统从上到下布局，移除 flex: 1 */
 }
 
 .percentage-ring-container {
@@ -220,8 +299,9 @@ async function handleShare() {
   color: #4A4A6A;
   font-family: '黑体', sans-serif;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  max-height: 300px;
-  overflow-y: auto;
+  min-height: 100px;
+  max-height: none;
+  overflow-y: visible;
 }
 
 .result-buttons {
@@ -263,5 +343,60 @@ async function handleShare() {
   background-color: #f5f5f5;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 其他匹配角色按钮区域 */
+.other-matches {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.matches-title {
+  font-size: 16px;
+  color: #4A4A6A;
+  margin-bottom: 10px;
+  font-family: '黑体', sans-serif;
+}
+
+.match-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.match-btn {
+  padding: 8px 16px;
+  border: 2px solid #5CE1E6;
+  border-radius: 30px;
+  background: white;
+  color: #4A4A6A;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: '黑体', sans-serif;
+}
+
+.match-btn:hover {
+  background: #5CE1E6;
+  color: white;
+}
+
+.match-btn.active {
+  background: #5CE1E6;
+  color: white;
+}
+
+.reset-btn {
+  background: #f5f0ff;
+  border-color: #bb88ee;
+  color: #bb88ee;
+}
+
+.reset-btn:hover {
+  background: #bb88ee;
+  color: white;
 }
 </style>

@@ -3,10 +3,110 @@ import { defineStore } from 'pinia'
 import type { TestState, MatchResult, Character } from '@/data'
 import { QUESTIONS, CHARACTERS, DIMENSION_NAMES } from '@/data'
 
+// 扩展MatchResult类型以支持多结果
+export interface ExtendedMatchResult extends MatchResult {
+  rank: number
+  isBestMatch: boolean
+}
+
+// 添加实验性选项状态
+const useWeightedMode = ref(true)
+const useMultiResultMode = ref(true)
+
+// 添加昵称状态
+const nickname = ref('你')
+
+// 存储键
+const OPTIONS_STORAGE_KEY = 'sekai-role-test-options'
+const NICKNAME_STORAGE_KEY = 'sekai-role-test-nickname'
+
+// 从localStorage加载昵称
+function loadNickname() {
+  const saved = localStorage.getItem(NICKNAME_STORAGE_KEY)
+  if (saved) {
+    try {
+      nickname.value = saved
+    } catch (e) {
+      console.error('解析昵称失败:', e)
+      nickname.value = '你'
+    }
+  }
+}
+
+// 保存昵称到localStorage
+function saveNickname(name: string) {
+  nickname.value = name
+  localStorage.setItem(NICKNAME_STORAGE_KEY, name)
+}
+
+// 从localStorage加载实验性选项状态
+function loadExperimentalOptions() {
+  console.log('开始加载实验性选项状态')
+  const saved = localStorage.getItem(OPTIONS_STORAGE_KEY)
+  console.log('从localStorage读取到的数据:', saved)
+  
+  // 默认值
+  let weightedMode = true
+  let multiResultMode = true
+  
+  if (saved) {
+    try {
+      const options = JSON.parse(saved)
+      console.log('解析后的选项数据:', options)
+      
+      if (typeof options.useWeightedMode === 'boolean') {
+        weightedMode = options.useWeightedMode
+        console.log('设置useWeightedMode为:', options.useWeightedMode)
+      }
+      if (typeof options.useMultiResultMode === 'boolean') {
+        multiResultMode = options.useMultiResultMode
+        console.log('设置useMultiResultMode为:', options.useMultiResultMode)
+      }
+    } catch (e) {
+      console.error('解析实验性选项失败:', e)
+      // 使用默认值
+      console.log('使用默认值 due to parsing error')
+    }
+  } else {
+    console.log('localStorage中没有找到实验性选项数据，使用默认值')
+    // 重要：当localStorage为空时，初始化默认值到localStorage
+    saveDefaultOptions()
+  }
+  
+  // 统一设置值
+  useWeightedMode.value = weightedMode
+  useMultiResultMode.value = multiResultMode
+  console.log('加载实验性选项状态完成:', { useWeightedMode: useWeightedMode.value, useMultiResultMode: useMultiResultMode.value })
+}
+
+// 保存默认选项到localStorage
+function saveDefaultOptions() {
+  const defaultOptions = {
+    useWeightedMode: true,
+    useMultiResultMode: true
+  }
+  localStorage.setItem(OPTIONS_STORAGE_KEY, JSON.stringify(defaultOptions))
+  console.log('已将默认选项保存到localStorage:', defaultOptions)
+}
+
+// 保存实验性选项状态到localStorage
+function saveExperimentalOptions() {
+  const options = {
+    useWeightedMode: useWeightedMode.value,
+    useMultiResultMode: useMultiResultMode.value
+  }
+  localStorage.setItem(OPTIONS_STORAGE_KEY, JSON.stringify(options))
+  console.log('保存实验性选项状态:', options)
+}
+
 const STORAGE_KEY = 'sekai-role-test-progress'
 const RESULT_STORAGE_KEY = 'sekai-role-test-result'
 
 export const useTestStore = defineStore('test', () => {
+  // 初始化时加载状态
+  loadNickname()
+  loadExperimentalOptions()
+  
   // 状态
   const currentIndex = ref(0)
   const answers = ref<(number | null)[]>(new Array(QUESTIONS.length).fill(null))
@@ -39,8 +139,19 @@ export const useTestStore = defineStore('test', () => {
     return currentIndex.value === totalQuestions.value - 1
   })
 
-  // 匹配结果计算
-  const matchResult = computed((): MatchResult => {
+  // 预计算全体角色各维度均值（用于加权算法）
+  const dimMeans = [0, 0, 0, 0, 0]
+  CHARACTERS.forEach(char => {
+    for (let i = 0; i < 5; i++) {
+      dimMeans[i] += char.dim[i]
+    }
+  })
+  for (let i = 0; i < 5; i++) {
+    dimMeans[i] /= CHARACTERS.length
+  }
+
+  // 计算所有角色的匹配度，返回按匹配度降序排列的数组
+  const allMatches = computed((): ExtendedMatchResult[] => {
     const dimSums = [0, 0, 0, 0, 0]
     const dimCounts = [0, 0, 0, 0, 0]
 
@@ -64,41 +175,67 @@ export const useTestStore = defineStore('test', () => {
       return count && count > 0 ? sum / count : 3
     })
 
-    // 计算最匹配的角色
-    let bestChar: Character = CHARACTERS[0] || {
-      id: 'unknown',
-      name: '未知角色',
-      color: '#CCCCCC',
-      desc: '暂无描述',
-      dim: [3, 3, 3, 3, 3]
-    }
-    let minDist = Infinity
-
-    for (const char of CHARACTERS) {
-      let dist = 0
-      for (let i = 0; i < 5; i++) {
-        const userVal = userAvg[i]
-        const charVal = char.dim[i]
-        if (typeof userVal === 'number' && typeof charVal === 'number') {
-          dist += Math.pow(userVal - charVal, 2)
-        }
-      }
-      dist = Math.sqrt(dist)
-
-      if (dist < minDist) {
-        minDist = dist
-        bestChar = char
-      }
-    }
-
-    // 计算匹配百分比
     const maxDist = Math.sqrt(5 * 16)
-    const matchPercent = Math.max(0, Math.min(100, Math.round(100 * (1 - minDist / maxDist))))
+    
+    // 计算所有角色的匹配度
+    const matches = CHARACTERS.map(char => {
+      let dist: number
+      
+      if (useWeightedMode.value) {
+        // 加权欧氏距离：权重 = 1 + 0.5 * |char.dim[i] - dimMeans[i]|
+        let sum = 0
+        for (let i = 0; i < 5; i++) {
+          const weight = 1 + 0.5 * Math.abs(char.dim[i] - dimMeans[i])
+          sum += weight * Math.pow(userAvg[i] - char.dim[i], 2)
+        }
+        dist = Math.sqrt(sum)
+      } else {
+        // 普通欧氏距离
+        let sum = 0
+        for (let i = 0; i < 5; i++) {
+          sum += Math.pow(userAvg[i] - char.dim[i], 2)
+        }
+        dist = Math.sqrt(sum)
+      }
+      
+      const percent = Math.max(0, Math.min(100, Math.round(100 * (1 - dist / maxDist))))
+      return { char, percent, dist }
+    })
 
+    // 按匹配度降序排序并添加排名信息
+    matches.sort((a, b) => b.percent - a.percent)
+    
+    return matches.map((match, index) => ({
+      character: match.char,
+      percentage: match.percent,
+      rank: index + 1,
+      isBestMatch: index === 0
+    }))
+  })
+
+  // 主要匹配结果（最佳匹配）
+  const matchResult = computed((): MatchResult => {
+    const bestMatch = allMatches.value[0]
     return {
-      character: bestChar,
-      percentage: matchPercent
+      character: bestMatch?.character || CHARACTERS[0] || {
+        id: 'unknown',
+        name: '未知角色',
+        color: '#CCCCCC',
+        desc: '暂无描述',
+        dim: [3, 3, 3, 3, 3]
+      },
+      percentage: bestMatch?.percentage || 0
     }
+  })
+
+  // 其他高匹配角色（匹配度>=60%且不是第一名）
+  const otherHighMatches = computed((): ExtendedMatchResult[] => {
+    if (!useMultiResultMode.value) return []
+    
+    const bestMatchId = matchResult.value.character.id
+    return allMatches.value
+      .filter(match => match.percentage >= 60 && match.character.id !== bestMatchId)
+      .slice(0, 8) // 最多显示8个
   })
 
   // 方法
@@ -141,6 +278,25 @@ export const useTestStore = defineStore('test', () => {
     timestamp.value = undefined
     localStorage.removeItem(STORAGE_KEY)
     // 不清除结果信息，让用户可以选择查看历史结果
+  }
+
+  // 实验性选项设置
+  function setWeightedMode(enabled: boolean) {
+    useWeightedMode.value = enabled
+    saveExperimentalOptions()
+  }
+  
+  function setMultiResultMode(enabled: boolean) {
+    useMultiResultMode.value = enabled
+    saveExperimentalOptions()
+  }
+
+  function getWeightedMode() {
+    return useWeightedMode.value
+  }
+
+  function getMultiResultMode() {
+    return useMultiResultMode.value
   }
 
   function saveProgress() {
@@ -248,6 +404,8 @@ export const useTestStore = defineStore('test', () => {
     canGoPrev,
     isLastQuestion,
     matchResult,
+    allMatches,
+    otherHighMatches,
 
     // 方法
     setAnswer,
@@ -260,6 +418,16 @@ export const useTestStore = defineStore('test', () => {
     hasSavedProgress,
     hasRecentResult,
     getLastResult,
-    clearResult
+    clearResult,
+    
+    // 实验性选项方法
+    setWeightedMode,
+    setMultiResultMode,
+    getWeightedMode,
+    getMultiResultMode,
+    
+    // 昵称方法
+    nickname,
+    saveNickname
   }
 })
