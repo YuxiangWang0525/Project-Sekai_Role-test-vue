@@ -54,7 +54,7 @@ function initChart() {
     .axis('y', {
       title: null,
       label: {
-        formatter: (d) => `${d}%`
+        formatter: (d: any) => `${d}%`
       }
     })
     .legend(true)
@@ -113,7 +113,7 @@ function updateChart() {
     .axis('y', {
       title: null,
       label: {
-        formatter: (d) => `${d}%`
+        formatter: (d: any) => `${d}%`
       }
     })
     .legend(false)
@@ -138,7 +138,7 @@ function updateChart() {
     }
   })
 
-  chart.render(true)
+  chart.render()
 }
 watch(() => props.matches, () => {
   if (props.matches.length > 0) {

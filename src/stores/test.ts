@@ -140,14 +140,16 @@ export const useTestStore = defineStore('test', () => {
   })
 
   // 预计算全体角色各维度均值（用于加权算法）
-  const dimMeans = [0, 0, 0, 0, 0]
+  const dimMeans: number[] = [0, 0, 0, 0, 0]
   CHARACTERS.forEach(char => {
     for (let i = 0; i < 5; i++) {
-      dimMeans[i] += char.dim[i]
+      if (char.dim && char.dim[i] !== undefined) {
+        (dimMeans[i] as number) += char.dim[i]!
+      }
     }
   })
   for (let i = 0; i < 5; i++) {
-    dimMeans[i] /= CHARACTERS.length
+    (dimMeans[i] as number) /= CHARACTERS.length
   }
 
   // 计算所有角色的匹配度，返回按匹配度降序排列的数组
@@ -185,15 +187,20 @@ export const useTestStore = defineStore('test', () => {
         // 加权欧氏距离：权重 = 1 + 0.5 * |char.dim[i] - dimMeans[i]|
         let sum = 0
         for (let i = 0; i < 5; i++) {
-          const weight = 1 + 0.5 * Math.abs(char.dim[i] - dimMeans[i])
-          sum += weight * Math.pow(userAvg[i] - char.dim[i], 2)
+          if (char.dim && char.dim[i] !== undefined && 
+              userAvg[i] !== undefined) {
+            const weight = 1 + 0.5 * Math.abs(char.dim[i]! - (dimMeans[i] as number))
+            sum += weight * Math.pow(userAvg[i]! - char.dim[i]!, 2)
+          }
         }
         dist = Math.sqrt(sum)
       } else {
         // 普通欧氏距离
         let sum = 0
         for (let i = 0; i < 5; i++) {
-          sum += Math.pow(userAvg[i] - char.dim[i], 2)
+          if (char.dim && char.dim[i] !== undefined && userAvg[i] !== undefined) {
+            sum += Math.pow(userAvg[i]! - char.dim[i]!, 2)
+          }
         }
         dist = Math.sqrt(sum)
       }

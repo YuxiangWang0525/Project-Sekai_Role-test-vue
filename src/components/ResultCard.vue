@@ -82,7 +82,7 @@ async function handleShare() {
         useCORS: true,
         // 确保等待所有内容渲染完成
         logging: false,
-        letterRendering: true
+        // letterRendering: true // 注释掉不支持的选项
       })
 
       // 创建下载链接
@@ -117,7 +117,7 @@ async function handleShare() {
   }
 }
 // console.log(props.otherMatches);
-const options = JSON.parse(localStorage.getItem('sekai-role-test-options'))
+const options = JSON.parse(localStorage.getItem('sekai-role-test-options') || '{}')
 // const useWeightedMode = options.useWeightedMode;
 const useMultiResultMode = options.useMultiResultMode;
 </script>
