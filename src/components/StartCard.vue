@@ -40,8 +40,8 @@ onMounted(() => {
 
 function handleClick() {
   console.log('StartCard按钮被点击')
-  console.log('当前选项状态:', { 
-    weightedMode: weightedMode.value, 
+  console.log('当前选项状态:', {
+    weightedMode: weightedMode.value,
     multiResultMode: multiResultMode.value,
     nickname: testStore.nickname
   })
@@ -62,17 +62,18 @@ function handleClick() {
       </div>
       <div class="name-input-area">
         <label>昵称</label>
-        <input 
+        <input
           ref="nicknameInput"
-          type="text" 
-          id="username-input" 
-          placeholder="你" 
-          :value="testStore.nickname" 
+          type="text"
+          id="username-input"
+          placeholder="你"
+          :value="testStore.nickname"
           maxlength="20"
           @input="handleNicknameInput"
         >
-        <p style="color:dimgray">(它将显示在结果页的标题文案中)</p>
+        <p style="color:dimgray">可以修改它 它将显示在结果页的标题文案中</p>
       </div>
+
 
       <!-- 实验性选项区域 -->
       <div class="experimental-options">
@@ -109,7 +110,7 @@ function handleClick() {
   border-radius: 40px;
   padding: 5px 20px;
   margin-bottom: 20px;
-  display: flex;
+  //display: flex;
   align-items: center;
   border: 1px solid #5CE1E6;
 }
