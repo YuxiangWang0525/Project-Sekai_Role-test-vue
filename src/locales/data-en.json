@@ -1,0 +1,40 @@
+{
+  "dimensions": {
+    "names": ["Extraversion", "Agreeableness", "Conscientiousness", "Neuroticism", "Openness"],
+    "valueLabels": ["Completely Disagree", "Somewhat Disagree", "Neutral", "Somewhat Agree", "Completely Agree"]
+  },
+  "questions": [
+    { "text": "Question 1" }, { "text": "Question 2" }, { "text": "Question 3" }, { "text": "Question 4" },
+    { "text": "Question 5" }, { "text": "Question 6" }, { "text": "Question 7" }, { "text": "Question 8" },
+    { "text": "Question 9" }, { "text": "Question 10" }, { "text": "Question 11" }, { "text": "Question 12" },
+    { "text": "Question 13" }, { "text": "Question 14" }, { "text": "Question 15" }, { "text": "Question 16" },
+    { "text": "Question 17" }, { "text": "Question 18" }, { "text": "Question 19" }, { "text": "Question 20" },
+    { "text": "Question 21" }, { "text": "Question 22" }, { "text": "Question 23" }, { "text": "Question 24" },
+    { "text": "Question 25" }, { "text": "Question 26" }, { "text": "Question 27" }, { "text": "Question 28" },
+    { "text": "Question 29" }, { "text": "Question 30" }, { "text": "Question 31" }, { "text": "Question 32" },
+    { "text": "Question 33" }, { "text": "Question 34" }, { "text": "Question 35" }, { "text": "Question 36" },
+    { "text": "Question 37" }, { "text": "Question 38" }, { "text": "Question 39" }
+  ],
+  "characters": {
+    "ichika": { "name": "Ichika Hoshino", "desc": "" },
+    "saki": { "name": "Saki Tenma", "desc": "" },
+    "honami": { "name": "Honami Mochizuki", "desc": "" },
+    "shiho": { "name": "Shiho Hinomori", "desc": "" },
+    "minori": { "name": "Minori Hanasato", "desc": "" },
+    "haruka": { "name": "Haruka Kiryu", "desc": "" },
+    "airi": { "name": "Airi Momoi", "desc": "" },
+    "shizuku": { "name": "Shizuku Hinomori", "desc": "" },
+    "kohane": { "name": "Kohane Azusawa", "desc": "" },
+    "an": { "name": "An Shiraishi", "desc": "" },
+    "akito": { "name": "Akito Shinonome", "desc": "" },
+    "touya": { "name": "Toya Aoyagi", "desc": "" },
+    "tsukasa": { "name": "Tsukasa Tenma", "desc": "" },
+    "emu": { "name": "Emu Otori", "desc": "" },
+    "nene": { "name": "Nene Kusanagi", "desc": "" },
+    "rui": { "name": "Rui Kamishiro", "desc": "" },
+    "kanade": { "name": "Kanade Yoisaki", "desc": "" },
+    "mafuyu": { "name": "Mafuyu Asahina", "desc": "" },
+    "ena": { "name": "Ena Shinonome", "desc": "" },
+    "mizuki": { "name": "Mizuki Akiyama", "desc": "" }
+  }
+}
