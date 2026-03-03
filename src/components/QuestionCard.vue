@@ -2,6 +2,9 @@
 import { ref, watch } from 'vue'
 import type { Question } from '@/data'
 import { VALUE_LABELS } from '@/data'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 interface Props {
   question: Question
@@ -94,12 +97,12 @@ document.addEventListener('mouseup', handleMouseUp)
 <template>
   <div class="test-card" id="test-card">
     <div class="question-section">
-      <div class="question-counter">{{ progress }} · 维度: {{ dimensionName }}</div>
+      <div class="question-counter">{{ progress }} · {{ t('test.dimensionPrefix') }} {{ dimensionName }}</div>
       <div class="question-text">{{ question.text }}</div>
     </div>
     <div class="answer-section">
       <div class="slider-container">
-        <div class="slider-label">请滑动选择你的符合程度</div>
+        <div class="slider-label">{{ t('question.sliderLabel') }}</div>
         <div class="slider-controls">
           <button 
             class="control-btn" 
@@ -139,14 +142,14 @@ document.addEventListener('mouseup', handleMouseUp)
           :disabled="!canGoPrev"
           @click="$emit('prev')"
         >
-          上一题
+          {{ t('question.prevButton') }}
         </button>
         <button 
           class="test-button primary-button" 
           :disabled="!canGoNext"
           @click="$emit('next')"
         >
-          {{ isLastQuestion ? '查看结果' : '下一题' }}
+          {{ isLastQuestion ? t('question.viewResultButton') : t('question.nextButton') }}
         </button>
       </div>
     </div>

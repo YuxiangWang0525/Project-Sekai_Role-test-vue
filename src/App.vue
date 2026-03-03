@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import { onMounted } from "vue";
+import { useI18n } from 'vue-i18n'
+import { useTitle } from "@vueuse/core";
+
+const title = useTitle()
+const { t } = useI18n()
+onMounted(() => {
+  title.value = t('app.title')
+})
 </script>
 
 <template>

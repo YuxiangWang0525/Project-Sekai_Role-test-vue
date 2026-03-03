@@ -3,6 +3,9 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTestStore } from '@/stores/test'
 import StartCard from '@/components/StartCard.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const router = useRouter()
 const testStore = useTestStore()
@@ -79,14 +82,14 @@ function handleDismissResult() {
     <div v-if="showResumeDialog" class="resume-dialog-overlay">
       <div class="resume-dialog">
         <div class="dialog-content">
-          <h3>检测到未完成的测试</h3>
-          <p>您上次的测试还未完成，是否要继续？</p>
+          <h3>{{ t('home.resumeDialog.title') }}</h3>
+          <p>{{ t('home.resumeDialog.message') }}</p>
           <div class="dialog-actions">
             <button class="test-button secondary-button" @click="handleCancel">
-              重新开始
+              {{ t('home.resumeDialog.cancel') }}
             </button>
             <button class="test-button primary-button" @click="handleStart(true)">
-              继续测试
+              {{ t('home.resumeDialog.continue') }}
             </button>
           </div>
         </div>
@@ -97,14 +100,14 @@ function handleDismissResult() {
     <div v-if="showResultDialog" class="resume-dialog-overlay">
       <div class="resume-dialog">
         <div class="dialog-content">
-          <h3>您近期已进行过测评</h3>
-          <p>是否查看最后一次测评结果？</p>
+          <h3>{{ t('home.resultDialog.title') }}</h3>
+          <p>{{ t('home.resultDialog.message') }}</p>
           <div class="dialog-actions">
             <button class="test-button secondary-button" @click="handleDismissResult">
-              不，谢谢
+              {{ t('home.resultDialog.dismiss') }}
             </button>
             <button class="test-button primary-button" @click="handleViewResult">
-              查看结果
+              {{ t('home.resultDialog.view') }}
             </button>
           </div>
         </div>

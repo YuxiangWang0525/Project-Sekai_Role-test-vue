@@ -2,6 +2,9 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { Chart } from '@antv/g2'
 import type { ExtendedMatchResult } from '@/stores/test'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 interface Props {
   matches: ExtendedMatchResult[]
@@ -54,7 +57,7 @@ function initChart() {
     .axis('y', {
       title: null,
       label: {
-        formatter: (d: any) => `${d}%`
+        formatter: (d: number) => `${d}%`
       }
     })
     .legend(true)
@@ -113,7 +116,7 @@ function updateChart() {
     .axis('y', {
       title: null,
       label: {
-        formatter: (d: any) => `${d}%`
+        formatter: (d: number) => `${d}%`
       }
     })
     .legend(false)
@@ -166,10 +169,10 @@ onUnmounted(() => {
 
 <template>
   <div class="bar-chart-container">
-    <h3 class="chart-title">其他高匹配角色</h3>
+    <h3 class="chart-title">{{ t('chart.otherMatchesTitle') }}</h3>
     <div v-if="matches.length > 0" ref="chartRef" class="chart-wrapper"></div>
     <div v-else class="no-data">
-      暂无其他高匹配角色
+      {{ t('chart.noData') }}
     </div>
   </div>
 </template>

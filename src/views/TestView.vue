@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTestStore } from '@/stores/test'
 import QuestionCard from '@/components/QuestionCard.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const router = useRouter()
 const testStore = useTestStore()
@@ -55,7 +58,7 @@ function handleExit() {
     <div v-if="isLoading" class="loading-overlay">
       <div class="loading-content">
         <div class="loading-spinner"></div>
-        <p>加载中...</p>
+        <p>{{ t('test.loading') }}</p>
       </div>
     </div>
 

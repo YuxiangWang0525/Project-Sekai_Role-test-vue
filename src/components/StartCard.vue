@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import { useTestStore } from '@/stores/test'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const emit = defineEmits<{
   (e: 'start'): void
@@ -52,16 +55,14 @@ function handleClick() {
 <template>
   <div class="test-card" id="start-card">
     <div class="question-section">
-      <div class="question-text">哪颗心与你共鸣？世界计划角色测试</div>
+      <div class="question-text">{{ t('start.title') }}</div>
     </div>
     <div class="answer-section">
       <div class="disclaimer">
-        本测试为粉丝二创作品，完全免费，基于《世界计划 彩色舞台》世界观。<br>
-        所有角色版权归属SEGA、Colorful Palette等原公司。<br>
-        39题·五维·实验性选项默认开启，可随时取消。
+        {{ t('start.disclaimer') }}
       </div>
       <div class="name-input-area">
-        <label>昵称</label>
+        <label>{{ t('start.nicknameLabel') }}</label>
         <input
           ref="nicknameInput"
           type="text"
@@ -71,7 +72,7 @@ function handleClick() {
           maxlength="20"
           @input="handleNicknameInput"
         >
-        <p style="color:dimgray">可以修改它 它将显示在结果页的标题文案中</p>
+        <p style="color:dimgray">{{ t('start.nicknameHint') }}</p>
       </div>
 
 
@@ -83,23 +84,31 @@ function handleClick() {
             id="weightedMode"
             v-model="weightedMode"
           >
-          <label for="weightedMode"><strong>结果多样化</strong> (加权算法，突出角色独特性)</label>
+          <label for="weightedMode"><strong>{{ t('start.weightedOption') }}</strong> ({{ t('start.weightedDesc') }})</label>
         </div>
-        <div class="option-note">※ 开启后可能影响结果客观性，但能增加低频角色的出现机会。</div>
+        <div class="option-note">{{ t('start.weightedNote') }}</div>
         <div class="option-item">
           <input
             type="checkbox"
             id="multiResultMode"
             v-model="multiResultMode"
           >
-          <label for="multiResultMode"><strong>多结果显示</strong> (展示匹配度≥60%的其他角色)</label>
+          <label for="multiResultMode"><strong>{{ t('start.multiResultOption') }}</strong> ({{ t('start.multiResultDesc') }})</label>
         </div>
       </div>
       <button class="test-button primary-button button-full" @click="handleClick">
-        开始测试
+        {{ t('start.startButton') }}
       </button>
       <br />
-      <p style="text-align:center;">这是<a href="https://github.com/yangzihao1234567/Project-Sekai_Role-test" target="_blank">Project-Sekai_Role-test</a>使用Vue 3重构的版本 <a href="https://github.com/YuxiangWang0525/Project-Sekai_Role-test-vue" target="_blank">GitHub</a><br></br>由<a href="https://github.com/YuxiangWang0525" target="_blank">晚江右海</a>主导维护. 以GPL v3 License发布</p>
+      <p style="text-align:center;">
+        {{ t('start.footerText1') }}
+        <a :href="t('start.footerLinks.originalProject')" target="_blank">Project-Sekai_Role-test</a>
+        {{ t('start.footerText2') }}
+        <a :href="t('start.footerLinks.vueVersion')" target="_blank">{{ t('start.footerGithub') }}</a><br>
+        {{ t('start.footerText3') }}
+        <a :href="t('start.footerLinks.maintainer')" target="_blank">{{ $i18n.locale === 'zh' ? '晚江右海' : ($i18n.locale === 'ja' ? '晩江右海' : 'Yuxiang Wang') }}</a>
+        {{ t('start.footerText4') }}
+      </p>
     </div>
   </div>
 </template>
@@ -110,7 +119,6 @@ function handleClick() {
   border-radius: 40px;
   padding: 5px 20px;
   margin-bottom: 20px;
-  //display: flex;
   align-items: center;
   border: 1px solid #5CE1E6;
 }
