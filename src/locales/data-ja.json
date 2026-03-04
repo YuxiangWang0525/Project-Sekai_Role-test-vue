@@ -1,0 +1,140 @@
+{
+  "dimensions": {
+    "names": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "valueLabels": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "questions": [
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" }
+  ],
+  "characters": {
+    "ichika": {
+      "name": "",
+      "desc": ""
+    },
+    "saki": {
+      "name": "",
+      "desc": ""
+    },
+    "honami": {
+      "name": "",
+      "desc": ""
+    },
+    "shiho": {
+      "name": "",
+      "desc": ""
+    },
+    "minori": {
+      "name": "",
+      "desc": ""
+    },
+    "haruka": {
+      "name": "",
+      "desc": ""
+    },
+    "airi": {
+      "name": "",
+      "desc": ""
+    },
+    "shizuku": {
+      "name": "",
+      "desc": ""
+    },
+    "kohane": {
+      "name": "",
+      "desc": ""
+    },
+    "an": {
+      "name": "",
+      "desc": ""
+    },
+    "akito": {
+      "name": "",
+      "desc": ""
+    },
+    "touya": {
+      "name": "",
+      "desc": ""
+    },
+    "tsukasa": {
+      "name": "",
+      "desc": ""
+    },
+    "emu": {
+      "name": "",
+      "desc": ""
+    },
+    "nene": {
+      "name": "",
+      "desc": ""
+    },
+    "rui": {
+      "name": "",
+      "desc": ""
+    },
+    "kanade": {
+      "name": "",
+      "desc": ""
+    },
+    "mafuyu": {
+      "name": "",
+      "desc": ""
+    },
+    "ena": {
+      "name": "",
+      "desc": ""
+    },
+    "mizuki": {
+      "name": "",
+      "desc": ""
+    }
+  }
+}

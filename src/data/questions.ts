@@ -21,7 +21,7 @@ function createQuestions(): Question[] {
     ja: dataJa
   }
   const data = dataMap[locale] || dataZh
-  
+
   return data.questions.map((q: any, index: number) => ({
     text: q.text || `Question ${index + 1}`,
     dim: QUESTION_DIMS[index] || 0

@@ -61,7 +61,7 @@ function createCharacters(): Character[] {
     ja: dataJa
   }
   const data = dataMap[locale] || dataZh
-  
+
   return Object.keys(CHARACTER_COLORS).map(id => ({
     id,
     name: data.characters[id]?.name || id,
