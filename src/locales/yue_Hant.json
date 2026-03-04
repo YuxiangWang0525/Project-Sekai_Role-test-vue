@@ -1,0 +1,92 @@
+{
+    "app": {
+        "title": "",
+        "start": "",
+        "next": "",
+        "prev": "",
+        "viewResult": "",
+        "restart": "",
+        "share": "",
+        "loading": "",
+        "resumeDialog": {
+            "title": "",
+            "message": "",
+            "continue": "",
+            "restart": ""
+        }
+    },
+    "dimensions": {
+        "extraversion": "",
+        "agreeableness": "",
+        "conscientiousness": "",
+        "neuroticism": "",
+        "openness": ""
+    },
+    "home": {
+        "resumeDialog": {
+            "title": "",
+            "message": "",
+            "cancel": "",
+            "continue": ""
+        },
+        "resultDialog": {
+            "title": "",
+            "message": "",
+            "dismiss": "",
+            "view": ""
+        }
+    },
+    "test": {
+        "loading": "",
+        "dimensionPrefix": ""
+    },
+    "start": {
+        "title": "",
+        "disclaimer": "",
+        "nicknameLabel": "",
+        "nicknameHint": "",
+        "weightedOption": "",
+        "weightedDesc": "",
+        "weightedNote": "",
+        "multiResultOption": "",
+        "multiResultDesc": "",
+        "startButton": "",
+        "footerText1": "",
+        "footerText2": "",
+        "footerGithub": "",
+        "footerText3": "",
+        "footerText4": "",
+        "footerLinks": {
+            "originalProject": "",
+            "vueVersion": "",
+            "maintainer": ""
+        }
+    },
+    "question": {
+        "sliderLabel": "",
+        "prevButton": "",
+        "nextButton": "",
+        "viewResultButton": ""
+    },
+    "chart": {
+        "otherMatchesTitle": "",
+        "noData": ""
+    },
+    "labels": {
+        "completelyDisagree": "",
+        "somewhatDisagree": "",
+        "neutral": "",
+        "somewhatAgree": "",
+        "completelyAgree": ""
+    },
+    "results": {
+        "title": "",
+        "matchPercentage": "",
+        "characterDescription": "",
+        "otherMatchesTitle": "",
+        "backButton": "",
+        "retryButton": "",
+        "shareButton": "",
+        "copyright": ""
+    }
+}
