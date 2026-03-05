@@ -65,7 +65,7 @@ function createCharacters(): Character[] {
   return Object.keys(CHARACTER_COLORS).map(id => ({
     id,
     name: data.characters[id]?.name || id,
-    color: CHARACTER_COLORS[id],
+    color: CHARACTER_COLORS[id]!,
     desc: data.characters[id]?.desc || '',
     dim: CHARACTER_DIMS[id]
   }))
