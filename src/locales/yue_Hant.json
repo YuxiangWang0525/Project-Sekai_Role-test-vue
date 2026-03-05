@@ -25,7 +25,7 @@
     "home": {
         "resumeDialog": {
             "title": "檢測到未做埋嘅測試",
-            "message": "你上次嘅測試仲未完成，係咪要繼續？",
+            "message": "你上次嘅測試仲未做埋，系要繼續？",
             "cancel": "重新開始",
             "continue": "繼續測試"
         },
