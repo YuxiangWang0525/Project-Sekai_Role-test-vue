@@ -26,6 +26,10 @@
 - **Vue i18n** - 国际化
 - **AntV G2** - 数据可视化(图表库)
 
+## 帮助我们翻译!
+可以在OpenDR团队托管的Weblate上翻译本项目.  
+[![翻译状态](https://weblate.dreameriver.cn/widget/project-sekai_role-test-vue/-/en/open-graph.png)](https://weblate.dreameriver.cn/engage/project-sekai_role-test-vue/)
+
 ##  安装和运行
 
 ```bash

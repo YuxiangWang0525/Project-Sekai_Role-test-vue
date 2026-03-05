@@ -87,6 +87,11 @@
     "backButton": "",
     "retryButton": "",
     "shareButton": "",
-    "copyright": ""
+    "copyright": "",
+    "titleText": {
+      "alsoLike": "",
+      "mostLike": "",
+      "alsoLikeGeneric": ""
+    }
   }
 }

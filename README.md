@@ -27,6 +27,11 @@ This is a refactoring project for Project-Sekai_Role-test, based on Vue 3 and Ty
 - **Vue i18n**
 - **AntV G2**
 
+## Help us translate!
+
+You can translate this project on OpenDR Team Hosted Weblate.  
+[![Translate Status](https://weblate.dreameriver.cn/widget/project-sekai_role-test-vue/-/en/open-graph.png)](https://weblate.dreameriver.cn/engage/project-sekai_role-test-vue/)
+
 ## 📦 Install and running
 
 ```bash

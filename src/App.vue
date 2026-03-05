@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { onMounted } from "vue";
+import { onMounted } from "vue"
 import { useI18n } from 'vue-i18n'
-import { useTitle } from "@vueuse/core";
+import { useTitle } from "@vueuse/core"
+import LanguageSelector from '@/components/LanguageSelector.vue'
 
 const title = useTitle()
 const { t } = useI18n()
@@ -13,6 +14,9 @@ onMounted(() => {
 
 <template>
   <div class="app-container">
+    <div class="language-selector-container">
+      <LanguageSelector />
+    </div>
     <RouterView />
   </div>
 </template>
@@ -47,5 +51,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+
+.language-selector-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
 }
 </style>

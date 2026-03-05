@@ -1,7 +1,4 @@
 import type { Question } from './types'
-import dataZh from '../locales/data-zh.json'
-import dataEn from '../locales/data-en.json'
-import dataJa from '../locales/data-ja.json'
 
 // 题目对应的维度索引（保持不变）
 const QUESTION_DIMS = [
@@ -12,25 +9,52 @@ const QUESTION_DIMS = [
   4, 4, 4, 4, 4, 4, 4      // 开放性 32-38
 ]
 
-// 从 i18n 数据生成题目列表
-function createQuestions(): Question[] {
+// 从 localStorage 获取当前语言并动态导入数据
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function getCurrentData(): Promise<any> {
   const locale = localStorage.getItem('preferred-language') || 'zh'
-  const dataMap: Record<string, any> = {
-    zh: dataZh,
-    en: dataEn,
-    ja: dataJa
+  
+  try {
+    if (locale === 'yue_Hant') {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      return await import('../locales/data-yue_Hant.json')
+    }
+    // 默认使用中文
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return await import('../locales/data-zh.json')
+  } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return await import('../locales/data-zh.json')
   }
-  const data = dataMap[locale] || dataZh
+}
 
-  return data.questions.map((q: any, index: number) => ({
+// 从 i18n 数据生成题目列表
+async function createQuestions(): Promise<Question[]> {
+  const data = await getCurrentData()
+  const questions = data.questions || []
+
+  return questions.map((q: any, index: number) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
     text: q.text || `Question ${index + 1}`,
     dim: QUESTION_DIMS[index] || 0
   }))
 }
 
-export const QUESTIONS: Question[] = createQuestions()
+// 初始加载（使用立即执行函数）
+let QUESTIONS: Question[] = []
 
-// 导出获取函数（支持响应式更新）
-export function getQuestionsDynamic(): Question[] {
-  return createQuestions()
+// 同步初始化
+const initPromise = (async () => {
+  QUESTIONS = await createQuestions()
+})()
+
+export { QUESTIONS }
+
+// 导出获取题目列表（支持响应式更新）
+export async function getQuestionsDynamic(): Promise<Question[]> {
+  return await createQuestions()
+}
+
+// 等待初始化完成
+export async function waitForInit(): Promise<void> {
+  await initPromise
 }

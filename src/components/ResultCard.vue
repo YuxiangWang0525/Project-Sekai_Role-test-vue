@@ -39,19 +39,26 @@ const displayPercentage = computed(() => {
 // 计算标题文案
 const titleText = computed(() => {
   const nickname = testStore.nickname || '你'
-  console.log('计算titleText:', {
-    nickname: nickname,
-    selectedCharacter: selectedCharacter.value?.name,
-    isBestMatch: props.isBestMatch,
-    matchResultName: props.matchResult.character.name
-  })
 
   if (selectedCharacter.value) {
-    return `${nickname}也很像${selectedCharacter.value.name}!`
+    // 使用 i18n 翻译，传入参数
+    return t('results.titleText.alsoLike', { 
+      nickname: nickname, 
+      characterName: selectedCharacter.value.name 
+    })
   }
-  return props.isBestMatch ? 
-    `${nickname}最像${props.matchResult.character.name}！` : 
-    `${nickname}也像${props.matchResult.character.name}`
+  
+  if (props.isBestMatch) {
+    return t('results.titleText.mostLike', { 
+      nickname: nickname, 
+      characterName: props.matchResult.character.name 
+    })
+  }
+  
+  return t('results.titleText.alsoLikeGeneric', { 
+    nickname: nickname, 
+    characterName: props.matchResult.character.name 
+  })
 })
 
 // 移除手动动画相关逻辑
@@ -72,10 +79,10 @@ function resetToBestMatch() {
 
 async function handleShare() {
   is_screenshot_show.value = true;
-  
+
   // 等待 Vue 完成 DOM 更新
   await nextTick();
-  
+
   try {
     const resultCard = document.querySelector('.test-card') as HTMLElement
     if (resultCard) {
@@ -177,7 +184,7 @@ const useMultiResultMode = options.useMultiResultMode;
       <div class="copyrights_screenshot" v-show="is_screenshot_show">
         <p>{{ t('results.copyright') }}</p>
       </div>
-      
+
       <!-- 操作按钮 -->
       <div class="result-buttons" v-show="!is_screenshot_show">
         <button class="test-button secondary-button" @click="$emit('retry')">

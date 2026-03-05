@@ -87,6 +87,11 @@
         "backButton": "← 返回最佳匹配",
         "retryButton": "重新測試",
         "shareButton": "分享結果",
-        "copyright": "由 SEKAI 項目角色測試生成（ Vue 3）\n根據 GPL v3 授權發佈"
+        "copyright": "由 SEKAI 項目角色測試生成（ Vue 3）\n根據 GPL v3 授權發佈",
+        "titleText": {
+            "alsoLike": "{nickname}都很像{characterName}!",
+            "mostLike": "{nickname}最似{characterName}！",
+            "alsoLikeGeneric": "{nickname}也像{characterName}"
+        }
     }
 }
