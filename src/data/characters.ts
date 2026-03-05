@@ -67,7 +67,7 @@ function createCharacters(): Character[] {
     name: data.characters[id]?.name || id,
     color: CHARACTER_COLORS[id]!,
     desc: data.characters[id]?.desc || '',
-    dim: CHARACTER_DIMS[id]
+    dim: CHARACTER_DIMS[id]!
   }))
 }
 
