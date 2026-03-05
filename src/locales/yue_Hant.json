@@ -1,92 +1,92 @@
 {
     "app": {
-        "title": "",
-        "start": "",
-        "next": "",
-        "prev": "",
-        "viewResult": "",
-        "restart": "",
-        "share": "",
-        "loading": "",
+        "title": "世界計畫角色匹配測試",
+        "start": "開始測試",
+        "next": "下一題",
+        "prev": "上一題",
+        "viewResult": "檢視結果",
+        "restart": "重新測試",
+        "share": "分享结果",
+        "loading": "載入中…",
         "resumeDialog": {
-            "title": "",
-            "message": "",
-            "continue": "",
-            "restart": ""
+            "title": "檢測到未做埋嘅測試",
+            "message": "你上次嘅測試仲未做埋，系要繼續？",
+            "continue": "繼續測試",
+            "restart": "重新开始"
         }
     },
     "dimensions": {
-        "extraversion": "",
-        "agreeableness": "",
-        "conscientiousness": "",
-        "neuroticism": "",
-        "openness": ""
+        "extraversion": "外向性",
+        "agreeableness": "宜人性",
+        "conscientiousness": "盡責性",
+        "neuroticism": "神經質",
+        "openness": "開放性"
     },
     "home": {
         "resumeDialog": {
-            "title": "",
-            "message": "",
-            "cancel": "",
-            "continue": ""
+            "title": "檢測到未完成嘅測試",
+            "message": "你上次嘅測試仲未完成，係咪要繼續？",
+            "cancel": "重新開始",
+            "continue": "繼續測試"
         },
         "resultDialog": {
-            "title": "",
-            "message": "",
-            "dismiss": "",
-            "view": ""
+            "title": "你近期已經進行過測評",
+            "message": "係咪睇緊最後一次測評結果？",
+            "dismiss": "唔使喇，多謝",
+            "view": "查看結果"
         }
     },
     "test": {
-        "loading": "",
-        "dimensionPrefix": ""
+        "loading": "加載中...",
+        "dimensionPrefix": "維度："
     },
     "start": {
-        "title": "",
-        "disclaimer": "",
-        "nicknameLabel": "",
-        "nicknameHint": "",
-        "weightedOption": "",
-        "weightedDesc": "",
-        "weightedNote": "",
-        "multiResultOption": "",
-        "multiResultDesc": "",
-        "startButton": "",
-        "footerText1": "",
-        "footerText2": "",
-        "footerGithub": "",
-        "footerText3": "",
-        "footerText4": "",
+        "title": "邊顆心同你共鳴？世界計劃角色測試",
+        "disclaimer": "本測試為粉絲二創作品，完全免費，基於《世界計劃彩色舞台》世界觀。\n所有角色版權歸屬 SEGA 、 Colorful Palette 等原公司。\n39題 · 五維 · 實驗性選項默認開啟，可隨時取消。",
+        "nicknameLabel": "暱稱",
+        "nicknameHint": "可以修改佢，佢會顯示喺結果頁嘅標題文案入面",
+        "weightedOption": "結果多樣化",
+        "weightedDesc": "加權算法，突出角色獨特性",
+        "weightedNote": "※ 開啟後可能影響結果客觀性，但係可以增加低頻角色嘅出現機會。",
+        "multiResultOption": "多結果顯示",
+        "multiResultDesc": "展示匹配度 ≥ 60 % 嘅其他角色",
+        "startButton": "開始測試",
+        "footerText1": "呢個係",
+        "footerText2": "使用 Vue 3重構嘅版本",
+        "footerGithub": "GitHub",
+        "footerText3": "由",
+        "footerText4": "主導維護。以 GPL v3授權發佈",
         "footerLinks": {
-            "originalProject": "",
-            "vueVersion": "",
-            "maintainer": ""
+            "originalProject": "https://github.com/yangzihao1234567/Project-Sekai_Role-test",
+            "vueVersion": "https://github.com/YuxiangWang0525/Project-Sekai_Role-test-vue",
+            "maintainer": "https://github.com/YuxiangWang0525"
         }
     },
     "question": {
-        "sliderLabel": "",
-        "prevButton": "",
-        "nextButton": "",
-        "viewResultButton": ""
+        "sliderLabel": "請滑動選擇你嘅符合程度",
+        "prevButton": "上一題",
+        "nextButton": "下一題",
+        "viewResultButton": "查看結果"
     },
     "chart": {
-        "otherMatchesTitle": "",
-        "noData": ""
+        "otherMatchesTitle": "其他高匹配嘅角色",
+        "noData": "暫時冇其他高匹配角色"
     },
     "labels": {
-        "completelyDisagree": "",
-        "somewhatDisagree": "",
-        "neutral": "",
-        "somewhatAgree": "",
-        "completelyAgree": ""
+        "completelyDisagree": "完全唔符合",
+        "somewhatDisagree": "唔太符合",
+        "neutral": "有啲符合",
+        "somewhatAgree": "基本符合",
+        "completelyAgree": "完全符合"
     },
     "results": {
-        "title": "",
-        "matchPercentage": "",
-        "characterDescription": "",
-        "otherMatchesTitle": "",
-        "backButton": "",
-        "retryButton": "",
-        "shareButton": "",
-        "copyright": ""
+        "title": "測試結果",
+        "matchPercentage": "匹配程度",
+        "characterDescription": "角色介紹",
+        "otherMatchesTitle": "其他高匹配嘅角色：",
+        "backButton": "← 返回最佳匹配",
+        "retryButton": "重新測試",
+        "shareButton": "分享結果",
+        "copyright": "由 SEKAI 項目角色測試生成（ Vue 3）\n根據 GPL v3 授權發佈"
     }
 }
