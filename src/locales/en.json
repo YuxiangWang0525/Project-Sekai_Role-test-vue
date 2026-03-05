@@ -1,97 +1,97 @@
 {
-  "app": {
-    "title": "",
-    "start": "",
-    "next": "",
-    "prev": "",
-    "viewResult": "",
-    "restart": "",
-    "share": "",
-    "loading": "",
-    "resumeDialog": {
-      "title": "",
-      "message": "",
-      "continue": "",
-      "restart": ""
-    }
-  },
-  "dimensions": {
-    "extraversion": "",
-    "agreeableness": "",
-    "conscientiousness": "",
-    "neuroticism": "",
-    "openness": ""
-  },
-  "home": {
-    "resumeDialog": {
-      "title": "",
-      "message": "",
-      "cancel": "",
-      "continue": ""
+    "app": {
+        "title": "",
+        "start": "",
+        "next": "",
+        "prev": "",
+        "viewResult": "",
+        "restart": "",
+        "share": "",
+        "loading": "",
+        "resumeDialog": {
+            "title": "",
+            "message": "",
+            "continue": "",
+            "restart": ""
+        }
     },
-    "resultDialog": {
-      "title": "",
-      "message": "",
-      "dismiss": "",
-      "view": ""
+    "dimensions": {
+        "extraversion": "",
+        "agreeableness": "",
+        "conscientiousness": "",
+        "neuroticism": "",
+        "openness": ""
+    },
+    "home": {
+        "resumeDialog": {
+            "title": "",
+            "message": "",
+            "cancel": "",
+            "continue": ""
+        },
+        "resultDialog": {
+            "title": "",
+            "message": "",
+            "dismiss": "",
+            "view": ""
+        }
+    },
+    "test": {
+        "loading": "",
+        "dimensionPrefix": ""
+    },
+    "start": {
+        "title": "",
+        "disclaimer": "",
+        "nicknameLabel": "",
+        "nicknameHint": "",
+        "weightedOption": "",
+        "weightedDesc": "",
+        "weightedNote": "",
+        "multiResultOption": "",
+        "multiResultDesc": "",
+        "startButton": "",
+        "footerText1": "",
+        "footerText2": "",
+        "footerGithub": "",
+        "footerText3": "",
+        "footerText4": "",
+        "footerLinks": {
+            "originalProject": "",
+            "vueVersion": "",
+            "maintainer": ""
+        }
+    },
+    "question": {
+        "sliderLabel": "",
+        "prevButton": "",
+        "nextButton": "",
+        "viewResultButton": ""
+    },
+    "chart": {
+        "otherMatchesTitle": "",
+        "noData": ""
+    },
+    "labels": {
+        "completelyDisagree": "",
+        "somewhatDisagree": "",
+        "neutral": "",
+        "somewhatAgree": "",
+        "completelyAgree": ""
+    },
+    "results": {
+        "title": "",
+        "matchPercentage": "",
+        "characterDescription": "",
+        "otherMatchesTitle": "",
+        "backButton": "",
+        "retryButton": "",
+        "shareButton": "",
+        "copyright": "",
+        "titleText": {
+            "alsoLike": "{nickname} are also like {characterName}!",
+            "mostLike": "{nickname}are the most like{characterName}!",
+            "alsoLikeGeneric": "{nickname} are also like {characterName}"
+        }
     }
-  },
-  "test": {
-    "loading": "",
-    "dimensionPrefix": ""
-  },
-  "start": {
-    "title": "",
-    "disclaimer": "",
-    "nicknameLabel": "",
-    "nicknameHint": "",
-    "weightedOption": "",
-    "weightedDesc": "",
-    "weightedNote": "",
-    "multiResultOption": "",
-    "multiResultDesc": "",
-    "startButton": "",
-    "footerText1": "",
-    "footerText2": "",
-    "footerGithub": "",
-    "footerText3": "",
-    "footerText4": "",
-    "footerLinks": {
-      "originalProject": "",
-      "vueVersion": "",
-      "maintainer": ""
-    }
-  },
-  "question": {
-    "sliderLabel": "",
-    "prevButton": "",
-    "nextButton": "",
-    "viewResultButton": ""
-  },
-  "chart": {
-    "otherMatchesTitle": "",
-    "noData": ""
-  },
-  "labels": {
-    "completelyDisagree": "",
-    "somewhatDisagree": "",
-    "neutral": "",
-    "somewhatAgree": "",
-    "completelyAgree": ""
-  },
-  "results": {
-    "title": "",
-    "matchPercentage": "",
-    "characterDescription": "",
-    "otherMatchesTitle": "",
-    "backButton": "",
-    "retryButton": "",
-    "shareButton": "",
-    "copyright": "",
-    "titleText": {
-      "alsoLike": "",
-      "mostLike": "",
-      "alsoLikeGeneric": ""
-    }
-  }
 }
