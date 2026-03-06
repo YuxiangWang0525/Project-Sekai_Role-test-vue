@@ -16,57 +16,57 @@
         }
     },
     "dimensions": {
-        "extraversion": "",
-        "agreeableness": "",
-        "conscientiousness": "",
-        "neuroticism": "",
-        "openness": ""
+        "extraversion": "Extraversion",
+        "agreeableness": "Agreeableness",
+        "conscientiousness": "Conscientiousness",
+        "neuroticism": "Neuroticism",
+        "openness": "Openness to Experience"
     },
     "home": {
         "resumeDialog": {
-            "title": "",
-            "message": "",
-            "cancel": "",
-            "continue": ""
+            "title": "Unfinished tests found",
+            "message": "Your previous test has not been completed yet. Do you want to continue?",
+            "cancel": "Restart",
+            "continue": "Continue"
         },
         "resultDialog": {
-            "title": "",
-            "message": "",
-            "dismiss": "",
-            "view": ""
+            "title": "You have already taken the assessment",
+            "message": "Do you want to view the last evaluation result?",
+            "dismiss": "No, thanks",
+            "view": "View results"
         }
     },
     "test": {
-        "loading": "",
-        "dimensionPrefix": ""
+        "loading": "Loading...",
+        "dimensionPrefix": "Dimensions:"
     },
     "start": {
         "title": "",
         "disclaimer": "",
-        "nicknameLabel": "",
-        "nicknameHint": "",
-        "weightedOption": "",
-        "weightedDesc": "",
-        "weightedNote": "",
-        "multiResultOption": "",
-        "multiResultDesc": "",
-        "startButton": "",
-        "footerText1": "",
-        "footerText2": "",
-        "footerGithub": "",
-        "footerText3": "",
-        "footerText4": "",
+        "nicknameLabel": "Nickname",
+        "nicknameHint": "You can modify it. It will be displayed in the title text on the result page",
+        "weightedOption": "Varied results",
+        "weightedDesc": "Weighted algorithm, highlighting the uniqueness of roles",
+        "weightedNote": "※ Enabling it may affect the objectivity of the results, but it can increase the chances of low-frequency characters appearing.",
+        "multiResultOption": "Multiple results",
+        "multiResultDesc": "Display other roles with a matching degree of ≥60% in multiple results",
+        "startButton": "Start",
+        "footerText1": "This is",
+        "footerText2": "refactored version using Vue 3",
+        "footerGithub": "GitHub",
+        "footerText3": "by",
+        "footerText4": "lead maintenance. Released under GPL v3 License",
         "footerLinks": {
-            "originalProject": "",
-            "vueVersion": "",
-            "maintainer": ""
+            "originalProject": "https://github.com/yangzihao1234567/Project-Sekai_Role-test",
+            "vueVersion": "https://github.com/YuxiangWang0525/Project-Sekai_Role-test-vue",
+            "maintainer": "https://github.com/YuxiangWang0525"
         }
     },
     "question": {
-        "sliderLabel": "",
-        "prevButton": "",
-        "nextButton": "",
-        "viewResultButton": ""
+        "sliderLabel": "Slide to select the level of agreement",
+        "prevButton": "Previous",
+        "nextButton": "Next",
+        "viewResultButton": "View results"
     },
     "chart": {
         "otherMatchesTitle": "",
