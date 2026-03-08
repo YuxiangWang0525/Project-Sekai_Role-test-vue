@@ -13,7 +13,12 @@
             "",
             "",
             ""
-        ]
+        ],
+        "extraversion": "Extrovertness",
+        "agreeableness": "Pleasantness",
+        "conscientiousness": "Sense of responsibility",
+        "neuroticism": "Nervousness",
+        "openness": "Openness"
     },
     "questions": [
         {
@@ -212,5 +217,81 @@
             "name": "Akiyama Mizuki",
             "desc": ""
         }
+    },
+    "app": {
+        "title": "Character Matching Test for Project Sekai",
+        "start": "Test start",
+        "next": "Next",
+        "prev": "Previous",
+        "viewResult": "Check the result",
+        "restart": "Retest",
+        "share": "Share the result",
+        "loading": "Loading……",
+        "resumeDialog": {
+            "title": "Unfinished tests detected",
+            "message": "Your last test has not been completed yet.Continue?",
+            "continue": "Continue test",
+            "restart": "Restart"
+        }
+    },
+    "home": {
+        "resumeDialog": {
+            "title": "Unfinished test detected",
+            "message": "Your last test has not been completed yet.Continue?",
+            "cancel": "Restart",
+            "continue": "Continue"
+        },
+        "resultDialog": {
+            "title": "You have tested recently",
+            "message": "Do you want to check the latest results?",
+            "dismiss": "No,thanks",
+            "view": "Check the results"
+        }
+    },
+    "test": {
+        "loading": "Loading……",
+        "dimensionPrefix": "Dimension:"
+    },
+    "start": {
+        "title": "Which heart resonates with you?Character test of Project Sekai",
+        "disclaimer": "This test is a second-created work for fans. It is completely free, based on the worldview of Project Sekai :Colorful Stage.\nThe copyright of all characters belongs to SEGA, Colorful Palette and other original companies.\nQ 39 · Five-dimensional · Experimental options are turned on by default and can be canceled at any time.",
+        "nicknameLabel": "Name",
+        "nicknameHint": "It could be modified and will be displayed in the title copy of the result page",
+        "weightedOption": "Diversified results",
+        "weightedDesc": "Weighted algorithm to highlight the uniqueness of the role",
+        "weightedNote": "※ After turning on, it may affect the objectivity of the results, but it can increase the chances of low-frequency characters.",
+        "multiResultOption": "Multiple results",
+        "multiResultDesc": "Show other characters with a match rate of ≥60%",
+        "startButton": "Test start",
+        "footerText1": "This is",
+        "footerText2": "Version reconstructed by Vue 3",
+        "footerGithub": "GitHub",
+        "footerText3": "By",
+        "footerText4": "Leading maintenance. Released with GPL v3 License",
+        "footerLinks": {
+            "originalProject": "https://github.com/yangzihao1234567/Project-Sekai_Role-test",
+            "vueVersion": "https://github.com/YuxiangWang0525/Project-Sekai_Role-test-vue",
+            "maintainer": "https://github.com/YuxiangWang0525"
+        }
+    },
+    "question": {
+        "sliderLabel": "Slide to select your compliance",
+        "prevButton": "Previous",
+        "nextButton": "Next",
+        "viewResultButton": "Show the results"
+    },
+    "chart": {
+        "otherMatchesTitle": "Other high-match characters",
+        "noData": "No other high-match characters for the time being"
+    },
+    "labels": {
+        "completelyDisagree": "Completely inconsistent",
+        "somewhatDisagree": "Not so consistent",
+        "neutral": "A little consistent",
+        "somewhatAgree": "Basically consistent",
+        "completelyAgree": "Completely consistent"
+    },
+    "results": {
+        "title": "Test results"
     }
 }
