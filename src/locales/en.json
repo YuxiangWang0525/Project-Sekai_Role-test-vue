@@ -1,61 +1,273 @@
 {
+    "dimensions": {
+        "names": [
+            "",
+            "",
+            "",
+            "",
+            ""
+        ],
+        "valueLabels": [
+            "",
+            "",
+            "",
+            "",
+            ""
+        ],
+        "extraversion": "Extrovertness",
+        "agreeableness": "Pleasantness",
+        "conscientiousness": "Sense of responsibility",
+        "neuroticism": "Nervousness",
+        "openness": "Openness"
+    },
+    "questions": [
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        },
+        {
+            "text": ""
+        }
+    ],
+    "characters": {
+        "ichika": {
+            "name": "Hoshino Ichika",
+            "desc": ""
+        },
+        "saki": {
+            "name": "Tenma Saki",
+            "desc": ""
+        },
+        "honami": {
+            "name": "Mochizuki Honami",
+            "desc": ""
+        },
+        "shiho": {
+            "name": "Hinomori Shiho",
+            "desc": ""
+        },
+        "minori": {
+            "name": "Hanasato Minori",
+            "desc": ""
+        },
+        "haruka": {
+            "name": "Kiritani Haruka",
+            "desc": ""
+        },
+        "airi": {
+            "name": "Momoi Airi",
+            "desc": ""
+        },
+        "shizuku": {
+            "name": "Hinomori Shizuku",
+            "desc": ""
+        },
+        "kohane": {
+            "name": "Azusawa Kohane",
+            "desc": ""
+        },
+        "an": {
+            "name": "Shiraishi An",
+            "desc": ""
+        },
+        "akito": {
+            "name": "Shinonome Akito",
+            "desc": ""
+        },
+        "touya": {
+            "name": "Aoyagi Toya",
+            "desc": ""
+        },
+        "tsukasa": {
+            "name": "Tenma Tsukasa",
+            "desc": ""
+        },
+        "emu": {
+            "name": "Otori Emu",
+            "desc": ""
+        },
+        "nene": {
+            "name": "Kusanagi Nene",
+            "desc": ""
+        },
+        "rui": {
+            "name": "Kamishiro Rui",
+            "desc": ""
+        },
+        "kanade": {
+            "name": "Yoisaki Kanade",
+            "desc": ""
+        },
+        "mafuyu": {
+            "name": "Asahina Mafuyu",
+            "desc": ""
+        },
+        "ena": {
+            "name": "Shinonome Ena",
+            "desc": ""
+        },
+        "mizuki": {
+            "name": "Akiyama Mizuki",
+            "desc": ""
+        }
+    },
     "app": {
         "title": "Character Matching Test for Project Sekai",
         "start": "Test start",
-        "next": "",
-        "prev": "",
-        "viewResult": "",
-        "restart": "",
-        "share": "",
-        "loading": "",
+        "next": "Next",
+        "prev": "Previous",
+        "viewResult": "Check the result",
+        "restart": "Retest",
+        "share": "Share the result",
+        "loading": "Loading……",
         "resumeDialog": {
-            "title": "",
-            "message": "",
-            "continue": "",
-            "restart": ""
+            "title": "Unfinished tests detected",
+            "message": "Your last test has not been completed yet.Continue?",
+            "continue": "Continue test",
+            "restart": "Restart"
         }
-    },
-    "dimensions": {
-        "extraversion": "Extraversion",
-        "agreeableness": "Agreeableness",
-        "conscientiousness": "Conscientiousness",
-        "neuroticism": "Neuroticism",
-        "openness": "Openness to Experience"
     },
     "home": {
         "resumeDialog": {
-            "title": "Unfinished tests found",
-            "message": "Your previous test has not been completed yet. Do you want to continue?",
+            "title": "Unfinished test detected",
+            "message": "Your last test has not been completed yet.Continue?",
             "cancel": "Restart",
             "continue": "Continue"
         },
         "resultDialog": {
-            "title": "You have already taken the assessment",
-            "message": "Do you want to view the last evaluation result?",
-            "dismiss": "No, thanks",
-            "view": "View results"
+            "title": "You have tested recently",
+            "message": "Do you want to check the latest results?",
+            "dismiss": "No,thanks",
+            "view": "Check the results"
         }
     },
     "test": {
-        "loading": "Loading...",
-        "dimensionPrefix": "Dimensions:"
+        "loading": "Loading……",
+        "dimensionPrefix": "Dimension:"
     },
     "start": {
-        "title": "",
-        "disclaimer": "",
-        "nicknameLabel": "Nickname",
-        "nicknameHint": "You can modify it. It will be displayed in the title text on the result page",
-        "weightedOption": "Varied results",
-        "weightedDesc": "Weighted algorithm, highlighting the uniqueness of roles",
-        "weightedNote": "※ Enabling it may affect the objectivity of the results, but it can increase the chances of low-frequency characters appearing.",
+        "title": "Which heart resonates with you?Character test of Project Sekai",
+        "disclaimer": "This test is a second-created work for fans. It is completely free, based on the worldview of Project Sekai :Colorful Stage.\nThe copyright of all characters belongs to SEGA, Colorful Palette and other original companies.\nQ 39 · Five-dimensional · Experimental options are turned on by default and can be canceled at any time.",
+        "nicknameLabel": "Name",
+        "nicknameHint": "It could be modified and will be displayed in the title copy of the result page",
+        "weightedOption": "Diversified results",
+        "weightedDesc": "Weighted algorithm to highlight the uniqueness of the role",
+        "weightedNote": "※ After turning on, it may affect the objectivity of the results, but it can increase the chances of low-frequency characters.",
         "multiResultOption": "Multiple results",
-        "multiResultDesc": "Display other roles with a matching degree of ≥60% in multiple results",
-        "startButton": "Start",
+        "multiResultDesc": "Show other characters with a match rate of ≥60%",
+        "startButton": "Test start",
         "footerText1": "This is",
-        "footerText2": "refactored version using Vue 3",
+        "footerText2": "Version reconstructed by Vue 3",
         "footerGithub": "GitHub",
-        "footerText3": "by",
-        "footerText4": "lead maintenance. Released under GPL v3 License",
+        "footerText3": "By",
+        "footerText4": "Leading maintenance. Released with GPL v3 License",
         "footerLinks": {
             "originalProject": "https://github.com/yangzihao1234567/Project-Sekai_Role-test",
             "vueVersion": "https://github.com/YuxiangWang0525/Project-Sekai_Role-test-vue",
@@ -63,35 +275,23 @@
         }
     },
     "question": {
-        "sliderLabel": "Slide to select the level of agreement",
+        "sliderLabel": "Slide to select your compliance",
         "prevButton": "Previous",
         "nextButton": "Next",
-        "viewResultButton": "View results"
+        "viewResultButton": "Show the results"
     },
     "chart": {
-        "otherMatchesTitle": "",
-        "noData": ""
+        "otherMatchesTitle": "Other high-match characters",
+        "noData": "No other high-match characters for the time being"
     },
     "labels": {
-        "completelyDisagree": "",
-        "somewhatDisagree": "",
-        "neutral": "",
-        "somewhatAgree": "",
-        "completelyAgree": ""
+        "completelyDisagree": "Completely inconsistent",
+        "somewhatDisagree": "Not so consistent",
+        "neutral": "A little consistent",
+        "somewhatAgree": "Basically consistent",
+        "completelyAgree": "Completely consistent"
     },
     "results": {
-        "title": "",
-        "matchPercentage": "",
-        "characterDescription": "",
-        "otherMatchesTitle": "",
-        "backButton": "",
-        "retryButton": "",
-        "shareButton": "",
-        "copyright": "",
-        "titleText": {
-            "alsoLike": "{nickname} are also like {characterName}!",
-            "mostLike": "{nickname}are the most like{characterName}!",
-            "alsoLikeGeneric": "{nickname} are also like {characterName}"
-        }
+        "title": "Test results"
     }
 }
