@@ -4,7 +4,7 @@
 
 [简体中文](README_CN.md)
 
-<p style="color:red;font-size:20px">SELLING THIS PROJECT OR COPYING THE PROJECT TITLE OR BUSINESS LOGIC THAT IS NOT OPEN SOURCE IS A VIOLATION OF THE OPEN SOURCE AGREEMENT AND CONSTITUTES SERIOUS INFRINGEMENT</p>
+<p style="color:red;font-size:20px">出售此项目或复制非开源的项目标题或业务逻辑违反了开源协议，构成严重侵权</p>
 
 ## 与原项目有何不同？
 - 使用Vue.js框架
