@@ -2,7 +2,9 @@
 
 这是一个基于Vue 3和TypeScript的Project-Sekai_Role-test重构项目
 
-<p style="color:red;font-size:20px">销售本项目或者抄袭本项目题目或业务逻辑且不开源的行为均属违反开源协议且构成严重侵权</p>
+[简体中文](README_CN.md)
+
+<p style="color:red;font-size:20px">SELLING THIS PROJECT OR COPYING THE PROJECT TITLE OR BUSINESS LOGIC THAT IS NOT OPEN SOURCE IS A VIOLATION OF THE OPEN SOURCE AGREEMENT AND CONSTITUTES SERIOUS INFRINGEMENT</p>
 
 ## 与原项目有何不同？
 - 使用Vue.js框架
@@ -14,7 +16,7 @@
 - 人类看得懂的代码
 - 国际化支持
 
-##  技术栈
+## 技术栈
 
 - **Vue 3** - 渐进式 JavaScript 框架
 - **TypeScript**
@@ -26,35 +28,38 @@
 - **Playwright** - 端到端测试
 - **html2canvas** - 图片导出功能
 - **Vue i18n** - 国际化
-- **AntV G2** - 数据可视化(图表库)
 
 ## 帮助我们翻译!
-可以在OpenDR团队托管的Weblate上翻译本项目.  
+
+可以在OpenDR团队托管的Weblate上翻译本项目.\
 [![翻译状态](https://weblate.dreameriver.cn/widget/project-sekai_role-test-vue/-/en/open-graph.png)](https://weblate.dreameriver.cn/engage/project-sekai_role-test-vue/)
 
-##  安装和运行
+## 安装和运行
 
 ```bash
-# 安装依赖
+# install dependencies
 npm install
 
-# 启动开发服务器
+# run dev server
 npm run dev
 
-# 构建生产版本
+# build for production
 npm run build
 
-# 运行单元测试
+# preview production build
+npm run preview
+
+# run unit tests
 npm run test:unit
 
-# 运行端到端测试
+# run end-to-end tests
 npm run test:e2e
 
-# 首次测试时 请安装Playwright组件
+# install Playwright browser drivers
 npx playwright install
 ```
 
 ## 许可证
 
-项目逻辑以GNU General Public License v3.0发布  
+项目逻辑以GNU General Public License v3.0发布\
 本项目仅供学习和交流使用，所有角色版权归 SEGA、Colorful Palette 等原公司所有。
