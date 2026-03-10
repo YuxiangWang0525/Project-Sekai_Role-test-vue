@@ -2,6 +2,8 @@
 
 这是一个基于Vue 3和TypeScript的Project-Sekai_Role-test重构项目
 
+<p style="color:red;font-size:20px">销售本项目或者抄袭本项目题目或业务逻辑且不开源的行为均属违反开源协议且构成严重侵权</p>
+
 ## 与原项目有何不同？
 - 使用Vue.js框架
 - 使用TypeScript和ESLint保证代码质量
