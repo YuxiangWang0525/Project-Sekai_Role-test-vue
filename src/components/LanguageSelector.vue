@@ -9,7 +9,7 @@ const isOpen = ref(false)
 const handleLanguageChange = (code: string) => {
   currentLanguage.value = code
   setCurrentLanguage(code)
-  switchLanguage(code as 'zh' | 'yue_Hant')
+  switchLanguage(code as 'zh' | 'en' | 'yue_Hant')
   isOpen.value = false
   
   // 刷新页面以应用新语言

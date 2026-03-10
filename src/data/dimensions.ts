@@ -6,7 +6,10 @@ async function getCurrentData(): Promise<any> {
   const locale = localStorage.getItem('preferred-language') || 'zh'
   
   try {
-    if (locale === 'yue_Hant') {
+    if (locale === 'en') {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      return await import('../locales/data-en.json')
+    } else if (locale === 'yue_Hant') {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       return await import('../locales/data-yue_Hant.json')
     }

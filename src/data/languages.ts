@@ -11,11 +11,11 @@ export const supportedLanguages: Language[] = [
     name: 'Chinese (Simplified)',
     nativeName: '简体中文'
   },
-  // {
-  //   code: 'en',
-  //   name: 'English',
-  //   nativeName: 'English'
-  // },
+  {
+    code: 'en',
+    name: 'English',
+    nativeName: 'English'
+  },
   // {
   //   code: 'ja',
   //   name: 'Japanese',
